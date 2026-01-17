@@ -1,0 +1,23 @@
+{
+  "name": "wedding-planner-app",
+  "version": "1.0.0",
+  "description": "婚礼管家程序",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "build": "echo 'Building...'"
+  },
+  "keywords": [
+    "wedding",
+    "planner",
+    "app"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^8.0.1",
+    "@capacitor/cli": "^8.0.1",
+    "@capacitor/core": "^8.0.1",
+    "@capacitor/ios": "^8.0.1"
+  }
+}

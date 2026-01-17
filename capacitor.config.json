@@ -1,0 +1,54 @@
+{
+  "appId": "com.weddingplanner.app",
+  "appName": "婚礼筹备管家",
+  "webDir": "web",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "",
+    "cleartext": true,
+    "allowNavigation": ["*"],
+    "androidScheme": "https",
+    "iosScheme": "capacitor"
+  },
+  "ios": {
+    "contentInset": "automatic",
+    "statusBarStyle": "light",
+    "statusBarPadding": true,
+    "allowLinkPreview": true,
+    "newArchEnabled": false
+  },
+  "android": {
+    "allowMixedContent": true,
+    "webContentsDebuggingEnabled": true,
+    "statusBarStyle": "light",
+    "statusBarColor": "#e74c3c",
+    "adaptiveIcon": {
+      "foregroundImage": "res/icon.png",
+      "backgroundColor": "#ffffff"
+    }
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "iosSplashResourceName": "Splash",
+      "spinnerColor": "#e74c3c"
+    },
+    "StatusBar": {
+      "style": "Light",
+      "background": "#e74c3c"
+    },
+    "Camera": {
+      "cameraPermission": "Allow婚礼筹备管家 to access your camera"
+    },
+    "Filesystem": {
+      "persistentStorage": true
+    },
+    "Network": {
+      "background": true
+    }
+  }
+}

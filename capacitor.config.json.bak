@@ -1,0 +1,16 @@
+{
+  "appId": "com.weddingplanner.app",
+  "appName": "wedding-planner-app",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "http://localhost:8080",
+    "cleartext": true
+  },
+  "ios": {
+    "contentInset": "automatic"
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
