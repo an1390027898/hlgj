@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>婚礼筹备管家清单 4.5 专业版 - 管家档期管理</title>
+    <title>婚礼筹备管家清单 1.0 专业版 - 管家档期管理</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.css">
     <!-- 引入Chart.js用于统计图表 -->
@@ -14,9 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <!-- 引入SheetJS用于导出Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- 引入Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+
     <style>
         :root {
             --primary-color: #e74c3c;
@@ -1075,124 +1073,421 @@
         }
         
         /* 响应式调整 */
+        /* 移动端整体布局优化 */
         @media (max-width: 768px) {
+            /* 基础样式优化 */
+            :root {
+                --border-radius: 12px;
+                --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            
             body {
-                padding-top: 80px;
+                padding-top: 70px;
+                font-size: 15px;
+                line-height: 1.5;
+            }
+            
+            /* 容器优化 */
+            .container {
+                padding: 0 12px;
+            }
+            
+            /* 头部优化 */
+            header {
+                padding: 10px 0;
             }
             
             .header-content {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
             }
             
-            .logo h1 {
+            .logo {
+                gap: 10px;
+            }
+            
+            .logo i {
                 font-size: 24px;
             }
             
-            .nav {
-                margin-top: 80px;
+            .logo h1 {
+                font-size: 18px;
+                font-weight: 700;
+            }
+            
+            .logo p {
+                display: none;
+            }
+            
+            #version {
+                font-size: 12px;
+                padding: 2px 6px;
+            }
+            
+            /* 头部操作按钮优化 */
+            .header-actions {
+                display: flex;
+                gap: 8px;
+            }
+            
+            .header-actions .btn {
+                padding: 8px 12px;
+                font-size: 13px;
+                gap: 5px;
+            }
+            
+            .header-actions .btn i {
+                font-size: 14px;
+            }
+            
+            /* 导航优化 */
+            nav {
+                margin-top: 70px;
+                position: sticky;
+                top: 70px;
+                z-index: 900;
             }
             
             .nav-tabs {
                 padding: 0;
                 overflow-x: scroll;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .nav-tabs::-webkit-scrollbar {
+                display: none;
             }
             
             .nav-tab {
-                padding: 15px 12px;
+                padding: 12px 15px;
                 font-size: 13px;
                 white-space: nowrap;
+                border-bottom: 3px solid transparent;
             }
             
             .nav-tab i {
-                margin-right: 5px;
+                margin-right: 6px;
+                font-size: 14px;
             }
             
-            .form-row {
+            /* 主要内容优化 */
+            main {
+                padding: 15px 0;
+            }
+            
+            /* 卡片优化 */
+            .card {
+                padding: 16px;
+                margin-bottom: 16px;
+                border-radius: var(--border-radius);
+            }
+            
+            .card-header {
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+            
+            .card-title {
+                font-size: 18px;
+            }
+            
+            /* 档期视图切换优化 */
+            .schedule-view-toggle {
                 flex-direction: column;
-                gap: 20px;
+                align-items: stretch;
+                gap: 12px;
+                padding: 12px;
+            }
+            
+            .view-toggle-buttons {
+                display: flex;
+                width: 100%;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .view-toggle-buttons::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .view-toggle-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            /* 档期按钮优化 */
+            .btn-group {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .btn-group::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .schedule-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                gap: 6px;
+                flex-shrink: 0;
+            }
+            
+            .schedule-count {
+                font-size: 11px;
+                padding: 2px 6px;
+            }
+            
+            /* 日历视图优化 */
+            .calendar-grid {
+                gap: 0.5px;
+            }
+            
+            .calendar-day-header {
+                padding: 8px 2px;
+                font-size: 12px;
+                font-weight: 600;
             }
             
             .calendar-day {
                 min-height: 80px;
-                padding: 8px 4px;
+                padding: 8px 5px;
             }
             
             .day-number {
-                font-size: 16px;
+                font-size: 15px;
+                margin-bottom: 3px;
             }
             
             .day-event {
                 font-size: 11px;
                 padding: 2px 4px;
+                margin-bottom: 2px;
+                border-radius: 3px;
             }
             
+            /* 列表视图优化 */
             .event-item {
                 flex-direction: column;
                 align-items: flex-start;
+                padding: 15px;
+                gap: 10px;
             }
             
             .event-date {
                 margin-right: 0;
-                margin-bottom: 15px;
-                width: 60px;
-                height: 60px;
+                margin-bottom: 0;
+                width: 55px;
+                height: 55px;
             }
             
             .event-day {
-                font-size: 20px;
+                font-size: 18px;
+            }
+            
+            .event-month {
+                font-size: 12px;
+            }
+            
+            .event-info {
+                width: 100%;
+            }
+            
+            .event-couple {
+                font-size: 16px;
+                margin-bottom: 5px;
             }
             
             .event-details {
                 flex-direction: column;
-                gap: 5px;
+                gap: 3px;
+                font-size: 13px;
             }
             
             .event-actions {
-                margin-top: 15px;
+                margin-top: 10px;
                 width: 100%;
                 justify-content: flex-end;
+                gap: 8px;
+            }
+            
+            /* 客户详情优化 */
+            .client-info-header {
+                padding: 25px 20px;
+            }
+            
+            .client-name {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+            
+            .client-wedding-date {
+                font-size: 16px;
+                padding: 10px 20px;
             }
             
             .client-info-grid {
                 grid-template-columns: 1fr;
-                padding: 20px;
-                gap: 15px;
+                padding: 15px;
+                gap: 12px;
             }
             
+            .info-section {
+                padding: 15px;
+            }
+            
+            .info-label {
+                font-size: 16px;
+                margin-bottom: 12px;
+                padding: 8px 12px;
+            }
+            
+            .info-item {
+                margin-bottom: 12px;
+                padding: 12px;
+            }
+            
+            .info-sub-label {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+            
+            .info-value {
+                font-size: 15px;
+            }
+            
+            .info-value.editable {
+                padding: 10px 15px;
+                font-size: 15px;
+            }
+            
+            /* 快速导航优化 */
             .quick-nav {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-                margin: 15px 20px;
-                padding: 15px;
+                gap: 12px;
+                margin: 12px;
+                padding: 12px;
             }
             
             .nav-card {
-                padding: 20px 15px;
+                padding: 18px 12px;
+                gap: 10px;
             }
             
             .nav-card i {
-                font-size: 32px;
-                margin-bottom: 15px;
+                font-size: 28px;
+                margin-bottom: 10px;
             }
             
             .nav-card-title {
-                font-size: 14px;
+                font-size: 13px;
+                text-align: center;
             }
             
+            /* 表单优化 */
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            label {
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+            
+            input, textarea, select {
+                padding: 12px 15px;
+                font-size: 15px;
+                border-radius: var(--border-radius);
+            }
+            
+            textarea {
+                min-height: 100px;
+            }
+            
+            /* 按钮优化 */
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+                border-radius: var(--border-radius);
+                gap: 8px;
+                min-height: 45px;
+            }
+            
+            .btn-small {
+                padding: 8px 15px;
+                font-size: 13px;
+                min-height: auto;
+            }
+            
+            /* 表格优化 */
+            .table-container {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+                margin-bottom: 15px;
+            }
+            
+            table {
+                min-width: 600px;
+                font-size: 13px;
+            }
+            
+            th {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+            
+            td {
+                padding: 10px 8px;
+            }
+            
+            /* 模态框优化 */
+            .modal-content {
+                width: 98%;
+                max-width: 400px;
+                padding: 20px;
+                margin: 10px;
+                border-radius: var(--border-radius);
+            }
+            
+            .modal-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            /* 操作按钮组优化 */
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            /* 导出选项优化 */
             .export-options {
-                justify-content: center;
+                flex-direction: column;
+                gap: 12px;
             }
             
             .export-option {
-                width: 140px;
-                padding: 15px;
+                width: 100%;
+                padding: 20px 15px;
+                gap: 10px;
             }
             
             .export-option i {
-                font-size: 28px;
+                font-size: 32px;
                 margin-bottom: 10px;
             }
             
@@ -1200,124 +1495,197 @@
                 font-size: 14px;
             }
             
-            /* 移动端表单优化 */
-            input, textarea, select {
-                padding: 14px 16px;
-                font-size: 15px;
-            }
-            
-            .btn {
-                padding: 12px 24px;
-                font-size: 15px;
-            }
-            
-            /* 移动端表格优化 */
-            .table-container {
-                overflow-x: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            table {
-                min-width: 600px;
-            }
-            
-            /* 移动端模态框优化 */
-            .modal-content {
-                width: 95%;
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            /* 移动端卡片优化 */
-            .card {
-                padding: 20px;
-                margin-bottom: 20px;
-            }
-            
-            /* 移动端头部操作按钮优化 */
-            .header-actions {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-            }
-            
-            .header-actions .btn {
-                flex: 1;
-                margin-right: 10px;
-            }
-            
-            .header-actions .btn:last-child {
-                margin-right: 0;
-            }
-            
-            /* 档期视图切换优化 */
-            .schedule-view-toggle {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-            
-            .view-toggle-buttons {
-                width: 100%;
-            }
-            
-            .view-toggle-btn {
-                flex: 1;
-                padding: 12px;
-                font-size: 14px;
-            }
-            
-            /* 统计图表容器优化 */
+            /* 统计图表优化 */
             .stats-chart-container {
                 padding: 15px;
             }
-        }
-        
-        @media (max-width: 480px) {
-            .quick-nav {
-                grid-template-columns: 1fr;
+            
+            .chart-container {
+                height: 250px;
             }
             
-            .export-option {
-                width: 100%;
-            }
-            
+            /* 客户操作按钮优化 */
             .client-actions {
                 flex-direction: column;
-                margin: 20px;
+                gap: 10px;
+                margin: 15px;
                 padding: 15px;
             }
             
-            .client-actions .btn {
-                width: 100%;
-                justify-content: center;
+            /* 子选项卡优化 */
+            .sub-tabs {
+                padding: 12px;
+                gap: 8px;
+                top: 110px;
             }
             
-            /* 小屏幕导航栏优化 */
-            .nav-tab {
-                padding: 12px 10px;
+            .sub-tab {
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+            
+            /* 双列布局优化 */
+            .two-column-layout {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            /* 进度条优化 */
+            .progress-container {
+                margin: 15px 0;
+                padding: 20px;
+            }
+            
+            /* 相位管理器优化 */
+            .phase-manager {
+                margin-bottom: 20px;
+                padding: 15px;
+            }
+            
+            .phase-list {
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+            
+            .phase-tag {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+        
+        /* 小屏幕优化 (iPhone SE, 更小屏幕) */
+        @media (max-width: 480px) {
+            /* 进一步压缩头部 */
+            .logo h1 {
+                font-size: 16px;
+            }
+            
+            .header-actions .btn {
+                padding: 7px 10px;
                 font-size: 12px;
             }
             
-            /* 小屏幕日历优化 */
-            .calendar-day {
-                min-height: 70px;
+            /* 导航标签优化 */
+            .nav-tab {
+                padding: 11px 12px;
+                font-size: 12px;
             }
             
-            /* 小屏幕事件项优化 */
+            .nav-tab i {
+                margin-right: 4px;
+                font-size: 13px;
+            }
+            
+            /* 日历优化 */
+            .calendar-day {
+                min-height: 70px;
+                padding: 6px 4px;
+            }
+            
+            .day-number {
+                font-size: 14px;
+            }
+            
+            .day-event {
+                font-size: 10px;
+                padding: 1px 3px;
+            }
+            
+            /* 快速导航优化 */
+            .quick-nav {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .nav-card {
+                flex-direction: row;
+                align-items: center;
+                padding: 12px 15px;
+            }
+            
+            .nav-card i {
+                font-size: 24px;
+                margin-bottom: 0;
+                margin-right: 12px;
+            }
+            
+            /* 表单元素优化 */
+            input, textarea, select {
+                padding: 11px 14px;
+                font-size: 14px;
+            }
+            
+            /* 按钮优化 */
+            .btn {
+                padding: 11px 18px;
+                font-size: 13px;
+            }
+            
+            /* 事件项优化 */
             .event-item {
-                padding: 15px;
+                padding: 12px;
+            }
+            
+            .event-couple {
+                font-size: 15px;
+            }
+            
+            /* 模态框优化 */
+            .modal-content {
+                padding: 18px;
+            }
+            
+            /* 客户详情优化 */
+            .client-info-header {
+                padding: 20px 15px;
+            }
+            
+            .client-name {
+                font-size: 22px;
+            }
+            
+            .client-wedding-date {
+                font-size: 15px;
+                padding: 8px 16px;
             }
         }
         
         /* 移动端触摸优化 */
-        .btn, .nav-tab, .event-item, .nav-card, .export-option {
+        .btn, .nav-tab, .event-item, .nav-card, .export-option, .sub-tab, .day-event, .calendar-day {
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
         
         /* 移动端滚动优化 */
         html {
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        
+        /* 禁用文本选择，提升移动端体验 */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* 允许表单元素和可编辑内容选择 */
+        input, textarea, select, [contenteditable="true"] {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        
+        /* 优化移动端点击反馈 */
+        .btn, .nav-tab, .nav-card, .export-option, .sub-tab, .day-event, .event-item {
+            transition: transform 0.1s ease, opacity 0.1s ease;
+        }
+        
+        .btn:active, .nav-tab:active, .nav-card:active, .export-option:active, .sub-tab:active, .day-event:active, .event-item:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
         
         /* 工具提示 */
@@ -1711,7 +2079,7 @@
                     <h1 contenteditable="true" id="mainTitle">婚礼筹备管家清单</h1>
                     <p>一站式婚礼筹备管理工具</p>
                 </div>
-                <span id="version">4.5 专业版</span>
+                <span id="version">1.0 专业版</span>
             </div>
             <div class="header-actions">
                 <button class="btn btn-secondary" id="exportOptionsBtn">
@@ -2000,63 +2368,7 @@
         
         <!-- 核心筹备选项卡 -->
         <div class="tab-content" id="preparation">
-            <!-- 网络功能面板 -->
-            <div class="card" style="margin-bottom: 20px;">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-globe"></i> 网络功能</h2>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px;">
-                    <!-- 天气显示 -->
-                    <div style="background: var(--light-color); padding: 15px; border-radius: var(--border-radius);">
-                        <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--dark-color);"><i class="fas fa-sun"></i> 婚礼当天天气</h3>
-                        <div id="weatherDisplay" style="text-align: center;">
-                            <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">--°C</div>
-                            <div style="color: var(--gray-dark); margin-top: 5px;">--</div>
-                            <button class="btn btn-primary btn-small" onclick="showWeather('北京')" style="margin-top: 15px;">
-                                <i class="fas fa-refresh"></i> 查询天气
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- 分享功能 -->
-                    <div style="background: var(--light-color); padding: 15px; border-radius: var(--border-radius);">
-                        <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--dark-color);"><i class="fas fa-share-alt"></i> 分享功能</h3>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="btn btn-primary btn-small" onclick="shareClientInfo()">
-                                <i class="fas fa-wedding-bells"></i> 分享婚礼信息
-                            </button>
-                            <button class="btn btn-secondary btn-small" onclick="shareWechatCard()">
-                                <i class="fab fa-weixin"></i> 分享管家名片
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- 数据同步状态 -->
-                    <div style="background: var(--light-color); padding: 15px; border-radius: var(--border-radius);">
-                        <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--dark-color);"><i class="fas fa-sync-alt"></i> 数据同步</h3>
-                        <div style="margin-bottom: 15px;">
-                            <div style="color: var(--gray-dark); margin-bottom: 5px;">同步状态</div>
-                            <div id="syncStatus" style="font-weight: 700; color: var(--success-color);">已同步</div>
-                        </div>
-                        <button class="btn btn-primary btn-small" onclick="loadDataFromFirebase()">
-                            <i class="fas fa-download"></i> 手动同步
-                        </button>
-                    </div>
-                    
-                    <!-- 微信公众号名片 -->
-                    <div style="background: var(--light-color); padding: 15px; border-radius: var(--border-radius);">
-                        <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--dark-color);"><i class="fab fa-weixin"></i> 关注我们</h3>
-                        <div style="text-align: center;">
-                            <img src="https://via.placeholder.com/120x120" alt="微信公众号二维码" style="width: 120px; height: 120px; margin-bottom: 15px; border-radius: 8px;">
-                            <div style="font-weight: 700; color: var(--dark-color); margin-bottom: 5px;">婚礼管家服务</div>
-                            <div style="color: var(--gray-dark); font-size: 14px; margin-bottom: 15px;">专业的婚礼筹备服务</div>
-                            <a href="https://mp.weixin.qq.com/s/your-article-link" target="_blank" class="btn btn-primary btn-small">
-                                <i class="fas fa-external-link-alt"></i> 访问公众号
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             
             <!-- 客户信息标题和保存按钮 -->
             <div class="card">
@@ -3327,7 +3639,7 @@
     <!-- 页脚 -->
     <footer>
         <div class="container">
-            <p>&copy; 2023 婚礼筹备管家清单 4.5 专业版 - 一站式婚礼筹备管理工具</p>
+            <p>&copy; 2026 婚礼筹备管家清单 1.0 专业版 - 一站式婚礼筹备管理工具</p>
         </div>
     </footer>
     
@@ -3400,181 +3712,9 @@
         let clients = [];
         let schedules = [];
         
-        // ===== 网络功能模块 =====
+
         
-        // 1. Firebase配置（请替换为您的配置）
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        
-        // 初始化Firebase
-        let firebaseApp;
-        let database;
-        let syncEnabled = false;
-        let lastLocalUpdate = 0;
-        let isSyncing = false;
-        
-        try {
-            firebaseApp = firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-        } catch (error) {
-            console.log('Firebase初始化失败:', error);
-        }
-        
-        // 2. 数据同步功能
-        
-        // 尝试初始化Firebase
-        function initFirebase() {
-            try {
-                if (!firebaseApp && typeof firebase !== 'undefined') {
-                    firebaseApp = firebase.initializeApp(firebaseConfig);
-                    database = firebase.database();
-                    syncEnabled = true;
-                    console.log('Firebase初始化成功');
-                    // 加载数据
-                    loadDataFromFirebase();
-                    // 设置数据变化监听
-                    setupDataListeners();
-                }
-            } catch (error) {
-                console.log('Firebase初始化失败:', error);
-                syncEnabled = false;
-            }
-        }
-        
-        // 从Firebase加载数据
-        function loadDataFromFirebase() {
-            if (!syncEnabled) return;
-            
-            database.ref('weddingPlanner').once('value').then((snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // 检查数据版本，处理冲突
-                    const cloudLastUpdated = data.lastUpdated || 0;
-                    if (cloudLastUpdated > lastLocalUpdate) {
-                        clients = data.clients || clients;
-                        schedules = data.schedules || schedules;
-                        lastLocalUpdate = cloudLastUpdated;
-                        renderAllTables();
-                        updateClientDetails();
-                        updatePreparationClientTitle();
-                        // 同时更新本地存储
-                        saveToLocalStorage();
-                        console.log('从Firebase加载数据成功');
-                    } else {
-                        console.log('本地数据已是最新版本，无需更新');
-                    }
-                }
-            }).catch(error => {
-                console.log('从Firebase加载数据失败:', error);
-            });
-        }
-        
-        // 保存数据到Firebase
-        function saveDataToFirebase() {
-            if (!syncEnabled || isSyncing) return;
-            
-            isSyncing = true;
-            const currentTime = Date.now();
-            
-            database.ref('weddingPlanner').set({
-                clients: clients,
-                schedules: schedules,
-                lastUpdated: currentTime
-            }).then(() => {
-                lastLocalUpdate = currentTime;
-                // 更新本地存储
-                saveToLocalStorage();
-                console.log('数据保存到Firebase成功');
-            }).catch(error => {
-                console.log('数据保存到Firebase失败:', error);
-            }).finally(() => {
-                isSyncing = false;
-            });
-        }
-        
-        // 设置数据变化监听
-        function setupDataListeners() {
-            if (!syncEnabled) return;
-            
-            database.ref('weddingPlanner').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // 检查数据版本，处理冲突
-                    const cloudLastUpdated = data.lastUpdated || 0;
-                    if (cloudLastUpdated > lastLocalUpdate) {
-                        clients = data.clients || clients;
-                        schedules = data.schedules || schedules;
-                        lastLocalUpdate = cloudLastUpdated;
-                        renderAllTables();
-                        updateClientDetails();
-                        updatePreparationClientTitle();
-                        // 同时更新本地存储
-                        saveToLocalStorage();
-                    }
-                }
-            });
-        }
-        
-        // 增量保存数据到Firebase
-        function saveIncrementalDataToFirebase(path, data) {
-            if (!syncEnabled || isSyncing) return;
-            
-            isSyncing = true;
-            const currentTime = Date.now();
-            
-            // 同时更新本地数据
-            updateLocalData(path, data);
-            
-            database.ref(`weddingPlanner/${path}`).update({
-                ...data,
-                updatedAt: currentTime
-            }).then(() => {
-                // 同时更新lastUpdated
-                return database.ref('weddingPlanner').update({ lastUpdated: currentTime });
-            }).then(() => {
-                lastLocalUpdate = currentTime;
-                // 更新本地存储
-                saveToLocalStorage();
-                console.log(`增量保存${path}到Firebase成功`);
-            }).catch(error => {
-                console.log(`增量保存${path}到Firebase失败:`, error);
-            }).finally(() => {
-                isSyncing = false;
-            });
-        }
-        
-        // 更新本地数据结构
-        function updateLocalData(path, data) {
-            const pathParts = path.split('/');
-            if (pathParts[0] === 'clients') {
-                const clientId = pathParts[1];
-                if (clientId) {
-                    const clientIndex = clients.findIndex(c => c.id === clientId);
-                    if (clientIndex !== -1) {
-                        clients[clientIndex] = { ...clients[clientIndex], ...data };
-                    }
-                } else {
-                    clients = data;
-                }
-            } else if (pathParts[0] === 'schedules') {
-                const scheduleId = pathParts[1];
-                if (scheduleId) {
-                    const scheduleIndex = schedules.findIndex(s => s.id === scheduleId);
-                    if (scheduleIndex !== -1) {
-                        schedules[scheduleIndex] = { ...schedules[scheduleIndex], ...data };
-                    }
-                } else {
-                    schedules = data;
-                }
-            }
-        }
+
         
         // 保存到本地存储
         function saveToLocalStorage() {
@@ -3602,105 +3742,12 @@
             }
         }
         
-        // 数据变更时自动同步
+        // 数据变更时自动同步到本地存储
         function onDataChanged() {
             saveToLocalStorage();
-            saveDataToFirebase();
         }
         
-        // 3. 天气获取功能
-        async function fetchWeather(city = '北京') {
-            const API_KEY = 'YOUR_OPENWEATHER_API_KEY';
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=zh_cn`;
-            
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const data = await response.json();
-                    return {
-                        temp: data.main.temp,
-                        description: data.weather[0].description,
-                        icon: `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`,
-                        city: data.name
-                    };
-                }
-            } catch (error) {
-                console.error('获取天气失败:', error);
-            }
-            return null;
-        }
-        
-        // 显示天气信息
-        async function showWeather(city) {
-            const weather = await fetchWeather(city);
-            const weatherDisplay = document.getElementById('weatherDisplay');
-            
-            if (weather) {
-                weatherDisplay.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px;">
-                        <img src="${weather.icon}" alt="天气图标" style="width: 50px; height: 50px;">
-                        <div style="font-size: 32px; font-weight: 700; color: var(--primary-color);">${Math.round(weather.temp)}°C</div>
-                    </div>
-                    <div style="color: var(--gray-dark); margin-bottom: 15px;">${weather.description} · ${weather.city}</div>
-                    <button class="btn btn-primary btn-small" onclick="showWeather('${city}')" style="margin-top: 15px;">
-                        <i class="fas fa-refresh"></i> 刷新天气
-                    </button>
-                `;
-            } else {
-                weatherDisplay.innerHTML = `
-                    <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">--°C</div>
-                    <div style="color: var(--gray-dark); margin-top: 5px;">天气查询失败</div>
-                    <button class="btn btn-primary btn-small" onclick="showWeather('${city}')" style="margin-top: 15px;">
-                        <i class="fas fa-refresh"></i> 重新查询
-                    </button>
-                `;
-            }
-        }
-        
-        // 4. 分享功能
-        function shareContent(title, text, url) {
-            if (navigator.share) {
-                navigator.share({
-                    title: title,
-                    text: text,
-                    url: url
-                })
-                .then(() => console.log('分享成功'))
-                .catch((error) => {
-                    console.log('分享失败:', error);
-                    copyToClipboard(url);
-                });
-            } else {
-                copyToClipboard(url);
-            }
-        }
-        
-        // 复制到剪贴板
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => alert('分享链接已复制到剪贴板'))
-                .catch(err => console.error('复制失败:', err));
-        }
-        
-        // 分享当前客户信息
-        function shareClientInfo() {
-            if (!currentClient) return;
-            
-            const title = `${currentClient.groomName} & ${currentClient.brideName} 的婚礼`;
-            const text = `${currentClient.groomName} & ${currentClient.brideName} 的婚礼将于 ${formatDate(currentClient.weddingDate)} 在 ${currentClient.venue} 举行`;
-            const url = `${window.location.origin}${window.location.pathname}?client=${currentClient.id}`;
-            
-            shareContent(title, text, url);
-        }
-        
-        // 5. 微信公众号链接分享
-        function shareWechatCard() {
-            const wechatUrl = 'https://mp.weixin.qq.com/s/your-article-link'; // 替换为您的公众号文章链接
-            shareContent('婚礼管家服务', '专业的婚礼筹备服务，为您打造完美婚礼', wechatUrl);
-        }
-        
-        // 初始化Firebase
-        initFirebase();
+
         
         // 初始化数据
         function initData() {
