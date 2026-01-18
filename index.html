@@ -258,13 +258,24 @@
         /* 档期日历样式 */
         .schedule-view-toggle {
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
             align-items: center;
+            gap: 10px;
             margin-bottom: 20px;
             background: white;
             padding: 10px 20px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
+        }
+        
+        .schedule-view-toggle .btn-group {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            -webkit-overflow-scrolling: touch;
         }
         
         .view-toggle-buttons {
@@ -1199,18 +1210,18 @@
             
             /* 档期视图切换优化 */
             .schedule-view-toggle {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
                 padding: 12px;
             }
             
             .view-toggle-buttons {
                 display: flex;
-                width: 100%;
                 overflow-x: auto;
                 scrollbar-width: none;
                 -ms-overflow-style: none;
+                flex-shrink: 0;
             }
             
             .view-toggle-buttons::-webkit-scrollbar {
@@ -1231,6 +1242,8 @@
                 overflow-x: auto;
                 scrollbar-width: none;
                 -ms-overflow-style: none;
+                flex: 1;
+                min-width: 0;
             }
             
             .btn-group::-webkit-scrollbar {
@@ -1242,6 +1255,7 @@
                 font-size: 12px;
                 gap: 6px;
                 flex-shrink: 0;
+                min-width: 100px;
             }
             
             .schedule-count {
@@ -1527,9 +1541,25 @@
             }
             
             /* 双列布局优化 */
-            .two-column-layout {
+            .two-column-layout,
+            #dayOfContent .two-column-layout {
                 grid-template-columns: 1fr;
                 gap: 15px;
+            }
+            
+            /* 婚礼当天页面表格优化 */
+            #dayOfContent table {
+                min-width: 600px;
+                font-size: 13px;
+            }
+            
+            #dayOfContent th {
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+            
+            #dayOfContent td {
+                padding: 10px 8px;
             }
             
             /* 进度条优化 */
@@ -1734,6 +1764,7 @@
             border-radius: var(--border-radius);
             gap: 10px;
             flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
         
         .sub-tab {
@@ -1762,6 +1793,56 @@
             background: var(--primary-color);
             border-color: var(--primary-color);
             box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        /* 确保子选项卡内容区域可以垂直滚动 */
+        .sub-tab-content {
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+        
+        /* 优化表格在移动设备上的显示 */
+        .sub-tab-content table,
+        #dayOfContent table {
+            min-width: 100%;
+            overflow-x: auto;
+            display: block;
+        }
+        
+        .sub-tab-content .two-column-layout,
+        #dayOfContent .two-column-layout {
+            display: block;
+        }
+        
+        /* 优化卡片在子选项卡内容中的显示 */
+        .sub-tab-content .card,
+        #dayOfContent .card {
+            margin-bottom: 20px;
+        }
+        
+        /* 优化婚礼当天页面内容显示 */
+        #dayOfContent {
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+        
+        /* 确保婚礼当天页面的表格可以水平滚动 */
+        #dayOfContent table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+            min-width: 100%;
+        }
+        
+        /* 确保婚礼当天页面的两列布局在移动设备上显示为单列 */
+        #dayOfContent .two-column-layout {
+            display: block;
+        }
+        
+        /* 优化婚礼当天页面的卡片样式 */
+        #dayOfContent .card {
+            margin-bottom: 20px;
+            overflow: hidden;
         }
         
         /* 分隔线样式 */
@@ -4750,6 +4831,13 @@
         // 搜索客户
         function searchClients() {
             const searchTerm = document.getElementById('clientSearch').value.toLowerCase();
+            
+            // 如果搜索词为空，渲染所有客户
+            if (searchTerm.trim() === '') {
+                renderClientsTable();
+                return;
+            }
+            
             const filteredClients = clients.filter(client => {
                 // 搜索新郎姓名、新娘姓名
                 const nameMatch = client.groomName.toLowerCase().includes(searchTerm) ||
@@ -4786,6 +4874,8 @@
                 // 添加高亮样式
                 row.className = 'search-result';
                 row.style.cursor = 'pointer';
+                row.style.backgroundColor = '#f8c8c6';
+                row.style.transition = 'all 0.3s ease';
                 row.addEventListener('click', function() {
                     selectClient(client.id);
                     // 切换到客户详情选项卡
@@ -4822,9 +4912,9 @@
                     updateClientStatus(client.id, this.value);
                 });
                 
-                // 为编辑按钮添加事件监听器
-                const editButton = row.querySelector('.btn-primary');
-                editButton.addEventListener('click', function(event) {
+                // 为查看详情按钮添加事件监听器
+                const viewButton = row.querySelector('.btn-primary');
+                viewButton.addEventListener('click', function(event) {
                     event.stopPropagation();
                     selectClient(client.id);
                     switchTab('client-details');
@@ -4840,7 +4930,7 @@
             });
             
             // 如果只有一个搜索结果，直接跳转到该客户详情
-            if (filteredClients.length === 1 && searchTerm.trim() !== '') {
+            if (filteredClients.length === 1) {
                 selectClient(filteredClients[0].id);
                 switchTab('client-details');
                 document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
