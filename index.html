@@ -2,7 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>婚礼筹备管家清单 1.0 专业版 - 管家档期管理</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.css">
@@ -4301,44 +4303,379 @@
                 return;
             }
             
+            // 创建包含所有数据的二维数组
+            const allData = [];
+            
+            // 1. 添加主标题
+            allData.push([`${currentClient.groomName} & ${currentClient.brideName} 婚礼信息`]);
+            allData.push(['']); // 空行
+            
+            // 2. 客户基本信息
+            allData.push(['基本信息']);
+            allData.push(['新人姓名', `${currentClient.groomName} & ${currentClient.brideName}`]);
+            allData.push(['婚礼日期', formatDate(currentClient.weddingDate)]);
+            allData.push(['婚礼酒店', currentClient.venue]);
+            allData.push(['酒店地址', currentClient.venueAddress]);
+            allData.push(['婚礼主题', currentClient.theme || '']);
+            allData.push(['服务费用', currentClient.fee || '']);
+            allData.push(['']); // 空行
+            
+            // 3. 男方信息
+            allData.push(['男方信息']);
+            allData.push(['姓名', currentClient.groomName]);
+            allData.push(['联系方式', currentClient.groomPhone || '']);
+            allData.push(['住址', currentClient.groomAddress || '']);
+            allData.push(['']); // 空行
+            
+            // 4. 女方信息
+            allData.push(['女方信息']);
+            allData.push(['姓名', currentClient.brideName]);
+            allData.push(['联系方式', currentClient.bridePhone || '']);
+            allData.push(['住址', currentClient.brideAddress || '']);
+            allData.push(['']); // 空行
+            
+            // 5. 家庭责任清单
+            allData.push(['家庭责任清单']);
+            allData.push(['序号', '项目内容', '负责人', '完成状态']);
+            const familyTasks = getFamilyTasksData();
+            for (let i = 1; i < familyTasks.length; i++) {
+                allData.push(familyTasks[i]);
+            }
+            allData.push(['']); // 空行
+            
+            // 6. 新娘嫁妆清单
+            allData.push(['新娘嫁妆清单']);
+            allData.push(['序号', '物品名称', '数量', '备注']);
+            const dowry = getDowryData();
+            for (let i = 1; i < dowry.length; i++) {
+                allData.push(dowry[i]);
+            }
+            allData.push(['']); // 空行
+            
+            // 7. 新郎物资清单
+            allData.push(['新郎物资清单']);
+            allData.push(['序号', '物品名称', '数量', '备注']);
+            const groomSupplies = getGroomSuppliesData();
+            for (let i = 1; i < groomSupplies.length; i++) {
+                allData.push(groomSupplies[i]);
+            }
+            allData.push(['']); // 空行
+            
+            // 8. 备婚时间表
+            allData.push(['备婚时间表']);
+            allData.push(['序号', '时间', '任务内容', '完成状态']);
+            const timeline = getTimelineData();
+            for (let i = 1; i < timeline.length; i++) {
+                allData.push(timeline[i]);
+            }
+            allData.push(['']); // 空行
+            
+            // 9. 工作人员安排
+            allData.push(['工作人员安排']);
+            allData.push(['序号', '姓名', '职位', '联系方式', '备注']);
+            const staff = getStaffData();
+            for (let i = 1; i < staff.length; i++) {
+                allData.push(staff[i]);
+            }
+            allData.push(['']); // 空行
+            
+            // 10. 供应商管理
+            allData.push(['供应商管理']);
+            allData.push(['序号', '供应商名称', '服务类型', '联系方式', '金额', '备注']);
+            const vendors = getVendorsData();
+            for (let i = 1; i < vendors.length; i++) {
+                allData.push(vendors[i]);
+            }
+            allData.push(['']); // 空行
+            
+            // 11. 婚礼当天流程
+            allData.push(['婚礼当天流程']);
+            allData.push(['序号', '时间', '流程内容', '备注']);
+            const weddingDay = getWeddingDayData();
+            for (let i = 1; i < weddingDay.length; i++) {
+                allData.push(weddingDay[i]);
+            }
+            allData.push(['']); // 空行
+            
+            // 12. 婚礼物品清单
+            allData.push(['婚礼物品清单']);
+            allData.push(['序号', '物品名称', '数量', '用途', '备注']);
+            const weddingItems = getWeddingItemsData();
+            for (let i = 1; i < weddingItems.length; i++) {
+                allData.push(weddingItems[i]);
+            }
+            
             // 创建工作簿
             const wb = XLSX.utils.book_new();
             
-            // 客户基本信息表
-            const clientInfo = [
-                ['新人姓名', `${currentClient.groomName} & ${currentClient.brideName}`],
-                ['婚礼日期', formatDate(currentClient.weddingDate)],
-                ['婚礼酒店', currentClient.venue],
-                ['酒店地址', currentClient.venueAddress],
-                ['婚礼主题', currentClient.theme || ''],
-                ['服务费用', currentClient.fee || '']
-            ];
+            // 创建工作表
+            const ws = XLSX.utils.aoa_to_sheet(allData);
             
-            const clientInfoSheet = XLSX.utils.aoa_to_sheet(clientInfo);
-            XLSX.utils.book_append_sheet(wb, clientInfoSheet, '客户基本信息');
+            // 优化表格格式
+            optimizeExcelFormat(ws, allData);
             
-            // 男方信息表
-            const groomInfo = [
-                ['男方姓名', currentClient.groomName],
-                ['联系方式', currentClient.groomPhone || ''],
-                ['住址', currentClient.groomAddress || '']
-            ];
-            
-            const groomInfoSheet = XLSX.utils.aoa_to_sheet(groomInfo);
-            XLSX.utils.book_append_sheet(wb, groomInfoSheet, '男方信息');
-            
-            // 女方信息表
-            const brideInfo = [
-                ['女方姓名', currentClient.brideName],
-                ['联系方式', currentClient.bridePhone || ''],
-                ['住址', currentClient.brideAddress || '']
-            ];
-            
-            const brideInfoSheet = XLSX.utils.aoa_to_sheet(brideInfo);
-            XLSX.utils.book_append_sheet(wb, brideInfoSheet, '女方信息');
+            // 添加工作表到工作簿
+            XLSX.utils.book_append_sheet(wb, ws, '婚礼信息');
             
             // 导出Excel文件
             XLSX.writeFile(wb, `${currentClient.groomName}_${currentClient.brideName}_婚礼信息_${formatDateForFilename()}.xlsx`);
+        }
+        
+        // 优化Excel表格格式
+        function optimizeExcelFormat(ws, data) {
+            // 设置列宽
+            ws['!cols'] = [
+                { wch: 10 },  // 序号列
+                { wch: 25 },  // 内容列
+                { wch: 15 },  // 负责人/数量/职位列
+                { wch: 15 },  // 状态/备注/联系列
+                { wch: 15 },  // 额外列
+                { wch: 15 }   // 额外列
+            ];
+            
+            // 设置行高
+            ws['!rows'] = [];
+            for (let i = 0; i < data.length; i++) {
+                ws['!rows'][i] = { hpt: 20 }; // 设置默认行高
+            }
+            
+            // 设置主标题行高
+            ws['!rows'][0] = { hpt: 30 }; // 主标题行高
+            
+            // 应用样式
+            let currentRow = 0;
+            
+            // 1. 主标题样式
+            ws[XLSX.utils.encode_cell({ r: currentRow, c: 0 })] = {
+                v: data[currentRow][0],
+                t: 's',
+                s: {
+                    font: { bold: true, size: 18, name: '微软雅黑' },
+                    alignment: { horizontal: 'center', vertical: 'center' },
+                    fill: { fgColor: { rgb: 'FCE4EC' } },
+                    border: {
+                        top: { style: 'thin' },
+                        bottom: { style: 'thin' },
+                        left: { style: 'thin' },
+                        right: { style: 'thin' }
+                    }
+                }
+            };
+            
+            // 合并主标题单元格
+            ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }];
+            currentRow += 2; // 跳过空行
+            
+            // 2. 各部分标题样式
+            let sectionTitles = ['基本信息', '男方信息', '女方信息', '家庭责任清单', '新娘嫁妆清单', '新郎物资清单', '备婚时间表', '工作人员安排', '供应商管理', '婚礼当天流程', '婚礼物品清单'];
+            
+            sectionTitles.forEach(title => {
+                while (currentRow < data.length) {
+                    if (data[currentRow][0] === title) {
+                        // 设置标题样式
+                        ws[XLSX.utils.encode_cell({ r: currentRow, c: 0 })] = {
+                            v: title,
+                            t: 's',
+                            s: {
+                                font: { bold: true, size: 14, name: '微软雅黑', color: { rgb: 'E91E63' } },
+                                alignment: { horizontal: 'left', vertical: 'center' },
+                                fill: { fgColor: { rgb: 'FCE4EC' } },
+                                border: {
+                                    top: { style: 'thin' },
+                                    bottom: { style: 'thin' },
+                                    left: { style: 'thin' },
+                                    right: { style: 'thin' }
+                                }
+                            }
+                        };
+                        
+                        // 合并标题单元格
+                        ws['!merges'].push({ s: { r: currentRow, c: 0 }, e: { r: currentRow, c: 5 } });
+                        
+                        // 标题行下一行（表头）样式
+                        currentRow++;
+                        if (currentRow < data.length && data[currentRow].length > 1) {
+                            // 表头样式
+                            for (let col = 0; col < data[currentRow].length; col++) {
+                                ws[XLSX.utils.encode_cell({ r: currentRow, c: col })] = {
+                                    v: data[currentRow][col],
+                                    t: 's',
+                                    s: {
+                                        font: { bold: true, size: 12, name: '微软雅黑', color: { rgb: 'E91E63' } },
+                                        alignment: { horizontal: 'center', vertical: 'center' },
+                                        fill: { fgColor: { rgb: 'FCE4EC' } },
+                                        border: {
+                                            top: { style: 'thin' },
+                                            bottom: { style: 'thin' },
+                                            left: { style: 'thin' },
+                                            right: { style: 'thin' }
+                                        }
+                                    }
+                                };
+                            }
+                        }
+                        
+                        // 跳过空行
+                        while (currentRow < data.length && data[currentRow][0] !== '' && data[currentRow][0] !== sectionTitles[sectionTitles.indexOf(title) + 1]) {
+                            currentRow++;
+                        }
+                        if (currentRow < data.length && data[currentRow][0] === '') {
+                            currentRow++;
+                        }
+                        break;
+                    }
+                    currentRow++;
+                }
+            });
+            
+            // 3. 设置所有单元格的基本样式
+            for (let r = 0; r < data.length; r++) {
+                for (let c = 0; c < (data[r] || []).length; c++) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: r, c: c });
+                    if (ws[cellAddress]) {
+                        // 如果单元格已有样式，保留现有样式，否则应用默认样式
+                        if (!ws[cellAddress].s) {
+                            ws[cellAddress].s = {
+                                font: { size: 11, name: '微软雅黑' },
+                                alignment: { vertical: 'center' },
+                                border: {
+                                    top: { style: 'thin' },
+                                    bottom: { style: 'thin' },
+                                    left: { style: 'thin' },
+                                    right: { style: 'thin' }
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 获取家庭责任清单数据
+        function getFamilyTasksData() {
+            const data = [['序号', '项目内容', '负责人', '完成状态']];
+            const rows = document.querySelectorAll('#family-tasks table tr:not(:first-child)');
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const item = cells[0].textContent.trim();
+                    const responsible = cells[1].textContent.trim();
+                    const status = cells[2].querySelector('input')?.checked ? '已完成' : '未完成';
+                    data.push([index + 1, item, responsible, status]);
+                }
+            });
+            return data;
+        }
+        
+        // 获取新娘嫁妆清单数据
+        function getDowryData() {
+            const data = [['序号', '物品名称', '数量', '备注']];
+            const rows = document.querySelectorAll('#dowry table tr:not(:first-child)');
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const item = cells[0].textContent.trim();
+                    const quantity = cells[1].textContent.trim();
+                    const note = cells[2].textContent.trim();
+                    data.push([index + 1, item, quantity, note]);
+                }
+            });
+            return data;
+        }
+        
+        // 获取新郎物资清单数据
+        function getGroomSuppliesData() {
+            const data = [['序号', '物品名称', '数量', '备注']];
+            const rows = document.querySelectorAll('#groom-supplies table tr:not(:first-child)');
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const item = cells[0].textContent.trim();
+                    const quantity = cells[1].textContent.trim();
+                    const note = cells[2].textContent.trim();
+                    data.push([index + 1, item, quantity, note]);
+                }
+            });
+            return data;
+        }
+        
+        // 获取备婚时间表数据
+        function getTimelineData() {
+            const data = [['序号', '时间', '任务内容', '完成状态']];
+            const items = document.querySelectorAll('#timeline .timeline-item');
+            items.forEach((item, index) => {
+                const time = item.querySelector('.timeline-time')?.textContent.trim() || '';
+                const content = item.querySelector('.timeline-content')?.textContent.trim() || '';
+                const checkbox = item.querySelector('.status-checkbox');
+                const status = checkbox?.checked ? '已完成' : '未完成';
+                data.push([index + 1, time, content, status]);
+            });
+            return data;
+        }
+        
+        // 获取工作人员安排数据
+        function getStaffData() {
+            const data = [['序号', '姓名', '职位', '联系方式', '备注']];
+            const rows = document.querySelectorAll('#staff table tr:not(:first-child)');
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 4) {
+                    const name = cells[0].textContent.trim();
+                    const position = cells[1].textContent.trim();
+                    const contact = cells[2].textContent.trim();
+                    const note = cells[3].textContent.trim();
+                    data.push([index + 1, name, position, contact, note]);
+                }
+            });
+            return data;
+        }
+        
+        // 获取供应商管理数据
+        function getVendorsData() {
+            const data = [['序号', '供应商名称', '服务类型', '联系方式', '金额', '备注']];
+            const rows = document.querySelectorAll('#vendors table tr:not(:first-child)');
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 5) {
+                    const name = cells[0].textContent.trim();
+                    const type = cells[1].textContent.trim();
+                    const contact = cells[2].textContent.trim();
+                    const amount = cells[3].textContent.trim();
+                    const note = cells[4].textContent.trim();
+                    data.push([index + 1, name, type, contact, amount, note]);
+                }
+            });
+            return data;
+        }
+        
+        // 获取婚礼当天流程数据
+        function getWeddingDayData() {
+            const data = [['序号', '时间', '流程内容', '备注']];
+            const items = document.querySelectorAll('#day-of .timeline-item');
+            items.forEach((item, index) => {
+                const time = item.querySelector('.timeline-time')?.textContent.trim() || '';
+                const content = item.querySelector('.timeline-content')?.textContent.trim() || '';
+                const note = item.querySelector('.timeline-note')?.textContent.trim() || '';
+                data.push([index + 1, time, content, note]);
+            });
+            return data;
+        }
+        
+        // 获取婚礼物品清单数据
+        function getWeddingItemsData() {
+            const data = [['序号', '物品名称', '数量', '用途', '备注']];
+            const rows = document.querySelectorAll('#day-of table tr:not(:first-child)');
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 4) {
+                    const item = cells[0].textContent.trim();
+                    const quantity = cells[1].textContent.trim();
+                    const purpose = cells[2].textContent.trim();
+                    const note = cells[3].textContent.trim();
+                    data.push([index + 1, item, quantity, purpose, note]);
+                }
+            });
+            return data;
         }
         
         // 导出所有客户Excel表格
