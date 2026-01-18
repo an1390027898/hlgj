@@ -1107,35 +1107,27 @@
             
             /* 头部优化 */
             header {
-                padding: 8px 0;
+                padding: 10px 0;
             }
             
             .header-content {
                 flex-direction: row;
                 align-items: center;
                 justify-content: space-between;
-                gap: 8px;
+                gap: 10px;
             }
             
             .logo {
-                gap: 8px;
-                flex: 1;
-                min-width: 0;
+                gap: 10px;
             }
             
             .logo i {
-                font-size: 20px;
-                flex-shrink: 0;
+                font-size: 24px;
             }
             
             .logo h1 {
-                font-size: 16px;
+                font-size: 18px;
                 font-weight: 700;
-                flex-shrink: 0;
-                margin: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
             }
             
             .logo p {
@@ -1143,35 +1135,24 @@
             }
             
             #version {
-                font-size: 10px;
-                padding: 1px 4px;
-                white-space: nowrap;
-                flex-shrink: 0;
-            }
-            
-            #currentUserName {
                 font-size: 12px;
-                margin-right: 8px;
-                white-space: nowrap;
+                padding: 2px 6px;
             }
             
             /* 头部操作按钮优化 */
             .header-actions {
                 display: flex;
-                align-items: center;
-                gap: 6px;
-                flex-shrink: 0;
+                gap: 8px;
             }
             
             .header-actions .btn {
-                padding: 6px 10px;
-                font-size: 12px;
-                gap: 4px;
-                min-height: 32px;
+                padding: 8px 12px;
+                font-size: 13px;
+                gap: 5px;
             }
             
             .header-actions .btn i {
-                font-size: 12px;
+                font-size: 14px;
             }
             
             /* 导航优化 */
@@ -1229,9 +1210,9 @@
             
             /* 档期视图切换优化 */
             .schedule-view-toggle {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
                 padding: 12px;
             }
             
@@ -1240,7 +1221,7 @@
                 overflow-x: auto;
                 scrollbar-width: none;
                 -ms-overflow-style: none;
-                width: 100%;
+                flex-shrink: 0;
             }
             
             .view-toggle-buttons::-webkit-scrollbar {
@@ -1248,8 +1229,8 @@
             }
             
             .view-toggle-btn {
-                padding: 8px 14px;
-                font-size: 12px;
+                padding: 10px 16px;
+                font-size: 13px;
                 white-space: nowrap;
                 flex-shrink: 0;
             }
@@ -1257,13 +1238,12 @@
             /* 档期按钮优化 */
             .btn-group {
                 display: flex;
-                gap: 6px;
+                gap: 8px;
                 overflow-x: auto;
                 scrollbar-width: none;
                 -ms-overflow-style: none;
-                width: 100%;
-                margin-left: 0 !important;
-                margin-bottom: 10px;
+                flex: 1;
+                min-width: 0;
             }
             
             .btn-group::-webkit-scrollbar {
@@ -1272,21 +1252,15 @@
             
             .schedule-btn {
                 padding: 8px 12px;
-                font-size: 11px;
-                gap: 5px;
+                font-size: 12px;
+                gap: 6px;
                 flex-shrink: 0;
-                min-width: 90px;
+                min-width: 100px;
             }
             
             .schedule-count {
-                font-size: 10px;
-                padding: 1px 5px;
-            }
-            
-            /* 添加婚礼档期按钮优化 */
-            #addEventBtn {
-                width: 100%;
-                margin-top: 0;
+                font-size: 11px;
+                padding: 2px 6px;
             }
             
             /* 日历视图优化 */
@@ -1711,32 +1685,6 @@
         html {
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
-        }
-        
-        /* 核心筹备页面清单优化 */
-        .sub-tab-content .card {
-            overflow: hidden;
-        }
-        
-        .sub-tab-content .card div[id$="Content"] {
-            overflow-x: auto;
-            overflow-y: visible;
-            max-height: 500px;
-            padding: 0 10px 15px;
-        }
-        
-        .sub-tab-content table {
-            word-break: break-word;
-        }
-        
-        .sub-tab-content table td[contenteditable="true"] {
-            word-break: break-word;
-            white-space: normal;
-            max-width: 200px;
-        }
-        
-        .sub-tab-content table th {
-            white-space: nowrap;
         }
         
         /* 禁用文本选择，提升移动端体验 */
@@ -2232,6 +2180,9 @@
                 <button class="btn btn-secondary" id="exportOptionsBtn">
                     <i class="fas fa-download"></i> 导出
                 </button>
+                <button class="btn btn-primary" id="addScheduleBtn">
+                    <i class="fas fa-plus"></i> 添加档期
+                </button>
             </div>
         </div>
     </header>
@@ -2360,10 +2311,24 @@
                     <button class="view-toggle-btn active" id="calendarViewBtn">日历视图</button>
                     <button class="view-toggle-btn" id="listViewBtn">列表视图</button>
                     <button class="view-toggle-btn" id="statsViewBtn">统计视图</button>
-                    <button class="btn btn-primary btn-small" id="addEventBtn" style="margin-left: auto;">
-                        <i class="fas fa-plus"></i> 添加婚礼档期
+                </div>
+                <div class="btn-group" style="margin-left: auto; display: flex; gap: 10px;">
+                    <button class="btn btn-secondary btn-small schedule-btn" id="thisMonthBtn">
+                        <i class="fas fa-calendar-month"></i> 本月档期
+                        <span class="schedule-count" id="thisMonthCount">0</span>
+                    </button>
+                    <button class="btn btn-secondary btn-small schedule-btn" id="fullYearBtn">
+                        <i class="fas fa-calendar"></i> 全年档期
+                        <span class="schedule-count" id="fullYearCount">0</span>
+                    </button>
+                    <button class="btn btn-secondary btn-small schedule-btn" id="monthlyIncomeBtn">
+                        <i class="fas fa-money-bill-wave"></i> 本月收入
+                        <span class="schedule-count" id="monthlyIncomeCount">¥0</span>
                     </button>
                 </div>
+                <button class="btn btn-primary btn-small" id="addEventBtn">
+                    <i class="fas fa-plus"></i> 添加婚礼档期
+                </button>
             </div>
             
             <!-- 统计图表容器 -->
@@ -2394,22 +2359,6 @@
                     <div class="calendar-grid" id="calendarGrid">
                         <!-- 日历将通过JavaScript动态生成 -->
                     </div>
-                    
-                    <!-- 本月档期、全年档期、本月收入按钮 -->
-                    <div class="btn-group" style="display: flex; gap: 8px; padding: 15px; justify-content: center;">
-                        <button class="btn btn-secondary btn-small schedule-btn" id="thisMonthBtn">
-                            <i class="fas fa-calendar-month"></i> 本月档期
-                            <span class="schedule-count" id="thisMonthCount">0</span>
-                        </button>
-                        <button class="btn btn-secondary btn-small schedule-btn" id="fullYearBtn">
-                            <i class="fas fa-calendar"></i> 全年档期
-                            <span class="schedule-count" id="fullYearCount">0</span>
-                        </button>
-                        <button class="btn btn-secondary btn-small schedule-btn" id="monthlyIncomeBtn">
-                            <i class="fas fa-money-bill-wave"></i> 本月收入
-                            <span class="schedule-count" id="monthlyIncomeCount">¥0</span>
-                        </button>
-                    </div>
                 </div>
             </div>
             
@@ -2432,14 +2381,12 @@
             <!-- 客户管理系统 -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title" style="font-size: 18px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-users"></i> 客户管理</h2>
-                    <div class="client-management-tools" style="display: flex; gap: 8px; align-items: center; position: relative; flex: 1; justify-content: flex-end;">
-                        <input type="text" id="clientSearch" placeholder="搜索客户..." style="padding: 8px 12px; border: 1px solid var(--gray); border-radius: var(--border-radius); font-size: 13px; width: 200px; flex: 1; min-width: 120px;">
+                    <h2 class="card-title"><i class="fas fa-users"></i> 客户管理</h2>
+                    <div class="client-management-tools" style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="clientSearch" placeholder="搜索客户..." style="padding: 10px 15px; border: 1px solid var(--gray); border-radius: var(--border-radius); font-size: 14px; width: 250px;">
                         <button class="btn btn-primary btn-small" id="refreshClients">
                             <i class="fas fa-sync-alt"></i> 刷新
                         </button>
-                        <!-- 搜索结果显示区域 -->
-                        <div id="searchResults" style="position: absolute; top: 100%; left: 0; width: 250px; max-height: 300px; overflow-y: auto; background: white; border: 1px solid var(--gray); border-radius: 0 0 var(--border-radius) var(--border-radius); box-shadow: var(--shadow); z-index: 1000; display: none;"></div>
                     </div>
                 </div>
                 
@@ -2471,15 +2418,15 @@
                     </div>
                 </div>
                 
-                <div class="client-info-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 15px;">
+                <div class="client-info-grid">
                     <!-- 男方信息 -->
-                    <div class="info-section groom-section" style="padding: 12px;">
-                        <div class="info-label" style="font-size: 15px; margin-bottom: 10px; padding: 6px 10px;">
+                    <div class="info-section groom-section">
+                        <div class="info-label">
                             <i class="fas fa-male"></i> 新郎信息
                         </div>
-                        <div class="info-item" style="margin-bottom: 10px; padding: 10px;">
-                            <div class="info-sub-label" style="font-size: 12px; margin-bottom: 6px;">姓名</div>
-                            <div class="info-value editable" contenteditable="true" id="clientGroomName" style="padding: 8px 12px; font-size: 14px;">张三</div>
+                        <div class="info-item">
+                            <div class="info-sub-label">姓名</div>
+                            <div class="info-value editable" contenteditable="true" id="clientGroomName">张三</div>
                         </div>
                         <div class="info-item">
                             <div class="info-sub-label">电话</div>
@@ -2492,8 +2439,8 @@
                     </div>
                     
                     <!-- 女方信息 -->
-                    <div class="info-section bride-section" style="padding: 12px;">
-                        <div class="info-label" style="font-size: 15px; margin-bottom: 10px; padding: 6px 10px;">
+                    <div class="info-section bride-section">
+                        <div class="info-label">
                             <i class="fas fa-female"></i> 新娘信息
                         </div>
                         <div class="info-item">
@@ -2511,11 +2458,11 @@
                     </div>
                     
                     <!-- 婚礼信息 -->
-                    <div class="info-section wedding-section" style="padding: 12px; grid-column: 1 / -1;">
-                        <div class="info-label" style="font-size: 15px; margin-bottom: 10px; padding: 6px 10px;">
+                    <div class="info-section wedding-section">
+                        <div class="info-label">
                             <i class="fas fa-heart"></i> 婚礼信息
                         </div>
-                        <div class="info-grid" style="gap: 15px;">
+                        <div class="info-grid">
                             <div class="info-item">
                                 <div class="info-sub-label">婚礼酒店</div>
                                 <div class="info-value editable" contenteditable="true" id="clientVenue">北京国际饭店</div>
@@ -2537,12 +2484,12 @@
                 </div>
                 
                 <!-- 客户操作按钮 -->
-                <div class="client-actions" style="margin: 15px; padding: 15px; gap: 10px;">
-                    <button class="btn btn-primary btn-small" onclick="saveClientDetails()">
-                        <i class="fas fa-save"></i> 保存
+                <div class="client-actions">
+                    <button class="btn btn-primary" onclick="saveClientDetails()">
+                        <i class="fas fa-save"></i> 保存客户信息
                     </button>
-                    <button class="btn btn-secondary btn-small" onclick="addClient()">
-                        <i class="fas fa-plus"></i> 添加客户
+                    <button class="btn btn-secondary" onclick="addClient()">
+                        <i class="fas fa-plus"></i> 添加新客户
                     </button>
                 </div>
                 
@@ -2562,45 +2509,45 @@
                 </script>
                 
                 <!-- 快速导航按钮 -->
-                <div class="quick-nav" style="margin: 15px; gap: 10px; padding: 12px;">
-                    <div class="nav-card" onclick="jumpToSubtab('family-tasks')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-home" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">家庭责任清单</div>
+                <div class="quick-nav">
+                    <div class="nav-card" onclick="jumpToSubtab('family-tasks')">
+                        <i class="fas fa-home"></i>
+                        <div class="nav-card-title">家庭责任清单</div>
                     </div>
                     
-                    <div class="nav-card" onclick="jumpToSubtab('dowry')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-gift" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">新娘嫁妆清单</div>
+                    <div class="nav-card" onclick="jumpToSubtab('dowry')">
+                        <i class="fas fa-gift"></i>
+                        <div class="nav-card-title">新娘嫁妆清单</div>
                     </div>
                     
-                    <div class="nav-card" onclick="jumpToSubtab('groom-supplies')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-suitcase" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">新郎物资清单</div>
+                    <div class="nav-card" onclick="jumpToSubtab('groom-supplies')">
+                        <i class="fas fa-suitcase"></i>
+                        <div class="nav-card-title">新郎物资清单</div>
                     </div>
                     
-                    <div class="nav-card" onclick="jumpToSubtab('timeline')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-calendar-alt" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">备婚时间表</div>
+                    <div class="nav-card" onclick="jumpToSubtab('timeline')">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="nav-card-title">备婚时间表</div>
                     </div>
                     
-                    <div class="nav-card" onclick="jumpToSubtab('staff')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-users-cog" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">工作人员安排</div>
+                    <div class="nav-card" onclick="jumpToSubtab('staff')">
+                        <i class="fas fa-users-cog"></i>
+                        <div class="nav-card-title">工作人员安排</div>
                     </div>
                     
-                    <div class="nav-card" onclick="jumpToSubtab('vendors')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-store" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">供应商管理</div>
+                    <div class="nav-card" onclick="jumpToSubtab('vendors')">
+                        <i class="fas fa-store"></i>
+                        <div class="nav-card-title">供应商管理</div>
                     </div>
                     
-                    <div class="nav-card" onclick="jumpToSubtab('budget')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-money-bill-wave" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">预算管理</div>
+                    <div class="nav-card" onclick="jumpToSubtab('budget')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div class="nav-card-title">预算管理</div>
                     </div>
                     
-                    <div class="nav-card" onclick="jumpToSubtab('checklist')" style="padding: 15px 10px; gap: 8px;">
-                        <i class="fas fa-list-check" style="font-size: 28px; margin-bottom: 8px;"></i>
-                        <div class="nav-card-title" style="font-size: 13px;">最终检查清单</div>
+                    <div class="nav-card" onclick="jumpToSubtab('checklist')">
+                        <i class="fas fa-list-check"></i>
+                        <div class="nav-card-title">最终检查清单</div>
                     </div>
                 </div>
             </div>
@@ -2612,17 +2559,20 @@
             
             <!-- 客户信息标题和保存按钮 -->
             <div class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2 class="card-title" id="preparationClientTitle" style="margin: 0; font-size: 16px;"><i class="fas fa-heart"></i> 张三 & 李四 的婚礼 - 核心筹备</h2>
-                    <button class="btn btn-primary btn-small" id="savePreparationBtn">
+                <div class="save-button-container">
+                    <button class="btn btn-primary" id="savePreparationBtn">
                         <i class="fas fa-save"></i> 保存当前进度
                     </button>
                 </div>
                 
+                <div class="card-header">
+                    <h2 class="card-title" id="preparationClientTitle"><i class="fas fa-heart"></i> 张三 & 李四 的婚礼 - 核心筹备</h2>
+                </div>
+                
                 <!-- 进度条 -->
-                <div class="progress-container" style="margin: 10px 0; padding: 15px; background-color: var(--light-color); border-radius: var(--border-radius);">
+                <div class="progress-container" style="margin: 20px 0; padding: 25px; background-color: var(--light-color); border-radius: var(--border-radius);">
                     <div class="progress-header">
-                        <h3 style="font-size: 16px; font-weight: 700; color: var(--dark-color);">筹备进度</h3>
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--dark-color);">筹备进度</h3>
                         <div class="progress-percent" id="progressPercent">30%</div>
                     </div>
                     <div class="progress-bar">
@@ -2654,8 +2604,7 @@
                                 <i class="fas fa-plus"></i> 添加责任
                             </button>
                         </div>
-                        <div id="groomFamilyTasksContent" style="overflow-x: auto; overflow-y: visible; max-height: 500px;">" + "
-
+                        <div id="groomFamilyTasksContent">
                             <!-- 男方家庭责任清单表格 -->
                             <table id="groomFamilyTasksTable" style="width: 100%; border-collapse: collapse;">
                                 <thead>
@@ -2707,8 +2656,7 @@
                                 <i class="fas fa-plus"></i> 添加责任
                             </button>
                         </div>
-                        <div id="brideFamilyTasksContent" style="overflow-x: auto; overflow-y: visible; max-height: 500px;">" + "
-
+                        <div id="brideFamilyTasksContent">
                             <!-- 女方家庭责任清单表格 -->
                             <table id="brideFamilyTasksTable" style="width: 100%; border-collapse: collapse;">
                                 <thead>
@@ -3446,8 +3394,8 @@
                     <div class="two-column-layout">
                         <!-- 男方流程 -->
                         <div class="card">
-                            <div class="card-header groom-section" style="padding: 15px 20px;">
-                                <h3 style="margin-bottom: 0; color: var(--dark-color); font-size: 20px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-male"></i> 男方当天流程</h3>
+                            <div class="card-header groom-section">
+                                <h3 class="card-title"><i class="fas fa-male"></i> 男方当天流程</h3>
                                 <button class="btn btn-primary btn-small" onclick="addDayOfItem('groom')">
                                     <i class="fas fa-plus"></i> 添加流程节点
                                 </button>
@@ -3509,8 +3457,8 @@
                         
                         <!-- 女方流程 -->
                         <div class="card">
-                            <div class="card-header bride-section" style="padding: 15px 20px;">
-                                <h3 style="margin-bottom: 0; color: var(--dark-color); font-size: 20px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-female"></i> 女方当天流程</h3>
+                            <div class="card-header bride-section">
+                                <h3 class="card-title"><i class="fas fa-female"></i> 女方当天流程</h3>
                                 <button class="btn btn-primary btn-small" onclick="addDayOfItem('bride')">
                                     <i class="fas fa-plus"></i> 添加流程节点
                                 </button>
@@ -3573,8 +3521,8 @@
                     
                     <!-- 共同流程 -->
                     <div class="card" style="margin-top: 30px;">
-                        <div class="card-header" style="padding: 15px 20px;">
-                            <h3 style="margin-bottom: 0; color: var(--dark-color); font-size: 20px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-heart"></i> 共同流程</h3>
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-heart"></i> 共同流程</h3>
                             <button class="btn btn-primary btn-small" onclick="addDayOfItem('common')">
                                 <i class="fas fa-plus"></i> 添加流程节点
                             </button>
@@ -3671,7 +3619,51 @@
                     </div>
                     
                     <!-- 婚礼当天人员分工 -->
-
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="margin-bottom: 15px; color: var(--dark-color); font-size: 20px;">当天人员分工</h3>
+                        <table id="dayOfStaffTable" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">姓名</th>
+                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">职位</th>
+                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">主要职责</th>
+                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">联系方式</th>
+                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">备注</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dayOfStaffTableBody">
+                                <!-- 示例数据 -->
+                                <tr>
+                                    <td contenteditable="true">主持人</td>
+                                    <td contenteditable="true">婚礼主持</td>
+                                    <td contenteditable="true">把控整个婚礼流程</td>
+                                    <td contenteditable="true">13700137001</td>
+                                    <td contenteditable="true">提前1小时到场</td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true">摄影师</td>
+                                    <td contenteditable="true">婚礼摄影</td>
+                                    <td contenteditable="true">全程拍摄婚礼照片</td>
+                                    <td contenteditable="true">13800138002</td>
+                                    <td contenteditable="true">提前1小时到场</td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true">摄像师</td>
+                                    <td contenteditable="true">婚礼摄像</td>
+                                    <td contenteditable="true">全程拍摄婚礼视频</td>
+                                    <td contenteditable="true">13900139002</td>
+                                    <td contenteditable="true">提前1小时到场</td>
+                                </tr>
+                                <tr>
+                                    <td contenteditable="true">化妆师</td>
+                                    <td contenteditable="true">新娘化妆</td>
+                                    <td contenteditable="true">新娘和伴娘的妆容和发型</td>
+                                    <td contenteditable="true">13700137002</td>
+                                    <td contenteditable="true">提前2小时到场</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     
                     <!-- 婚礼当天物品清单 -->
                     <div>
@@ -3679,12 +3671,7 @@
                         <div id="dayOfItemsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
                             <!-- 示例数据 -->
                             <div class="checklist-section" style="background-color: var(--light-color); padding: 20px; border-radius: var(--border-radius);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                    <h4 style="margin-bottom: 0; color: var(--dark-color); font-size: 16px;">新人必备物品</h4>
-                                    <button class="btn btn-primary btn-small" onclick="addDayOfItem('newlywed')" style="padding: 6px 12px; font-size: 13px;">
-                                        <i class="fas fa-plus"></i> 添加物品
-                                    </button>
-                                </div>
+                                <h4 style="margin-bottom: 15px; color: var(--dark-color); font-size: 16px;">新人必备物品</h4>
                                 <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                                     <input type="checkbox" class="status-checkbox">
                                     <div contenteditable="true">婚戒</div>
@@ -3704,12 +3691,7 @@
                             </div>
                             
                             <div class="checklist-section" style="background-color: var(--light-color); padding: 20px; border-radius: var(--border-radius);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                    <h4 style="margin-bottom: 0; color: var(--dark-color); font-size: 16px;">现场布置物品</h4>
-                                    <button class="btn btn-primary btn-small" onclick="addDayOfItem('decor')" style="padding: 6px 12px; font-size: 13px;">
-                                        <i class="fas fa-plus"></i> 添加物品
-                                    </button>
-                                </div>
+                                <h4 style="margin-bottom: 15px; color: var(--dark-color); font-size: 16px;">现场布置物品</h4>
                                 <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
                                     <input type="checkbox" class="status-checkbox">
                                     <div contenteditable="true">鲜花</div>
@@ -3781,7 +3763,7 @@
                                 <i class="fas fa-plus"></i> 添加联系人
                             </button>
                         </div>
-                        <div id="contactsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
+                        <div id="contactsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
                             <!-- 示例联系人 -->
                             <div class="contact-item" style="background-color: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow);">
                                 <div style="font-weight: 700; color: var(--dark-color); margin-bottom: 5px;" contenteditable="true">张摄影</div>
@@ -3818,7 +3800,7 @@
                                 <i class="fas fa-plus"></i> 添加小知识
                             </button>
                         </div>
-                        <div id="weddingTips" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
+                        <div id="weddingTips" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
                             <!-- 示例小知识 -->
                             <div class="tip-item" style="background-color: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow);">
                                 <h4 style="margin-bottom: 10px; color: var(--dark-color); font-size: 16px;" contenteditable="true">婚礼前注意事项</h4>
@@ -3840,11 +3822,6 @@
             </div>
         </div>
     </main>
-    
-    <!-- 回到顶部按钮 -->
-    <button id="backToTopBtn" class="btn btn-primary" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 999; width: 50px; height: 50px; border-radius: 50%; padding: 0; font-size: 24px; line-height: 1;">
-        <i class="fas fa-arrow-up"></i>
-    </button>
     
     <!-- 页脚 -->
     <footer>
@@ -5104,17 +5081,14 @@
         // 搜索客户
         function searchClients() {
             const searchTerm = document.getElementById('clientSearch').value.toLowerCase();
-            const resultsContainer = document.getElementById('searchResults');
             
-            // 如果搜索词为空，渲染所有客户到表格中，并隐藏搜索结果
+            // 如果搜索词为空，渲染所有客户
             if (searchTerm.trim() === '') {
                 renderClientsTable();
-                resultsContainer.style.display = 'none';
                 return;
             }
             
-            // 获取过滤后的客户
-            let filteredClients = clients.filter(client => {
+            const filteredClients = clients.filter(client => {
                 // 搜索新郎姓名、新娘姓名
                 const nameMatch = client.groomName.toLowerCase().includes(searchTerm) ||
                                   client.brideName.toLowerCase().includes(searchTerm);
@@ -5131,79 +5105,111 @@
                 const phoneMatch = (client.groomPhone && client.groomPhone.toLowerCase().includes(searchTerm)) ||
                                   (client.bridePhone && client.bridePhone.toLowerCase().includes(searchTerm));
                 
+                // 搜索婚礼主题
+                const themeMatch = client.theme && client.theme.toLowerCase().includes(searchTerm);
+                
+                // 搜索服务费用
+                const feeMatch = client.fee && client.fee.toLowerCase().includes(searchTerm);
+                
                 // 综合所有匹配条件
-                return nameMatch || venueMatch || dateMatch || phoneMatch;
+                return nameMatch || venueMatch || dateMatch || phoneMatch || themeMatch || feeMatch;
             });
             
-            // 按婚礼日期排序
-            filteredClients.sort((a, b) => new Date(a.weddingDate) - new Date(b.weddingDate));
-            
             // 渲染搜索结果
-            resultsContainer.innerHTML = '';
+            const tbody = document.getElementById('clientsTableBody');
+            tbody.innerHTML = '';
             
             // 搜索结果为空时的提示
             if (filteredClients.length === 0) {
-                resultsContainer.innerHTML = `
-                    <div style="padding: 15px; text-align: center; color: var(--gray-dark); border-bottom: 1px solid var(--gray);">
+                const noResultRow = document.createElement('tr');
+                noResultRow.innerHTML = `
+                    <td colspan="5" style="text-align: center; padding: 30px; color: var(--gray-dark);">
                         未找到匹配的客户，请尝试其他搜索条件
-                    </div>
+                    </td>
                 `;
-                resultsContainer.style.display = 'block';
+                tbody.appendChild(noResultRow);
                 return;
             }
             
-            // 渲染搜索结果项
+            // 搜索结果统计和提示
+            const resultCountRow = document.createElement('tr');
+            resultCountRow.innerHTML = `
+                <td colspan="5" style="text-align: left; padding: 15px; background-color: var(--secondary-color); color: var(--dark-color); font-weight: 600;">
+                    找到 ${filteredClients.length} 个匹配的客户
+                </td>
+            `;
+            tbody.appendChild(resultCountRow);
+            
             filteredClients.forEach(client => {
-                const resultItem = document.createElement('div');
-                resultItem.className = 'search-result-item';
-                resultItem.style.padding = '12px 15px';
-                resultItem.style.borderBottom = '1px solid var(--gray)';
-                resultItem.style.cursor = 'pointer';
-                resultItem.style.transition = 'background-color 0.2s ease';
-                resultItem.style.backgroundColor = 'white';
-                
-                // 悬停效果
-                resultItem.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = 'var(--secondary-color)';
-                });
-                
-                resultItem.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = 'white';
-                });
-                
-                // 点击跳转到客户详情
-                resultItem.addEventListener('click', function() {
+                const row = document.createElement('tr');
+                // 添加高亮样式
+                row.className = 'search-result';
+                row.style.cursor = 'pointer';
+                row.style.backgroundColor = '#f8c8c6';
+                row.style.transition = 'all 0.3s ease';
+                row.style.borderLeft = '5px solid var(--primary-color)';
+                row.addEventListener('click', function() {
                     selectClient(client.id);
                     // 切换到客户详情选项卡
                     switchTab('client-details');
                     // 滚动到客户详情页面顶部
                     document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    // 关闭搜索结果
-                    resultsContainer.style.display = 'none';
-                    // 清空搜索框
-                    document.getElementById('clientSearch').value = '';
-                    // 刷新主表格
-                    renderClientsTable();
+                });
+                row.innerHTML = `
+                    <td>
+                        <select class="status-select" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--gray); cursor: pointer;">
+                            <option value="green" ${client.status === 'green' ? 'selected' : ''}>进行中</option>
+                            <option value="yellow" ${client.status === 'yellow' ? 'selected' : ''}>待确认</option>
+                            <option value="red" ${client.status === 'red' ? 'selected' : ''}>已取消</option>
+                        </select>
+                    </td>
+                    <td style="font-weight: 700; color: var(--dark-color);">${client.groomName} & ${client.brideName}</td>
+                    <td>${formatDate(client.weddingDate)}</td>
+                    <td>${client.venue}</td>
+                    <td style="cursor: auto;">
+                        <button class="btn btn-primary btn-small" style="background-color: var(--primary-color); color: white;">
+                            <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        <button class="btn btn-secondary btn-small" style="margin-left: 5px;">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+                
+                // 为状态选择器添加事件监听器
+                const statusSelect = row.querySelector('.status-select');
+                statusSelect.addEventListener('change', function(event) {
+                    event.stopPropagation();
+                    updateClientStatus(client.id, this.value);
                 });
                 
-                // 显示客户基本信息
-                resultItem.innerHTML = `
-                    <div style="font-weight: 600; color: var(--dark-color); margin-bottom: 5px;">
-                        ${client.groomName} & ${client.brideName}
-                    </div>
-                    <div style="font-size: 13px; color: var(--gray-dark); margin-bottom: 3px;">
-                        <i class="fas fa-calendar-alt"></i> ${formatDate(client.weddingDate)}
-                    </div>
-                    <div style="font-size: 13px; color: var(--gray-dark);">
-                        <i class="fas fa-map-marker-alt"></i> ${client.venue}
-                    </div>
-                `;
+                // 为查看详情按钮添加事件监听器
+                const viewButton = row.querySelector('.btn-primary');
+                viewButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    selectClient(client.id);
+                    switchTab('client-details');
+                    document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
                 
-                resultsContainer.appendChild(resultItem);
+                // 为删除按钮添加事件监听器
+                const deleteButton = row.querySelector('.btn-secondary');
+                deleteButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    deleteClient(client.id);
+                });
             });
             
-            // 显示搜索结果容器
-            resultsContainer.style.display = 'block';
+            // 如果只有一个搜索结果，直接跳转到该客户详情
+            if (filteredClients.length === 1) {
+                // 延迟跳转，让用户看到搜索结果
+                setTimeout(() => {
+                    selectClient(filteredClients[0].id);
+                    switchTab('client-details');
+                    document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            }
         }
         
         // 添加档期
@@ -5482,23 +5488,7 @@
             });
             
             // 客户搜索
-            const clientSearchInput = document.getElementById('clientSearch');
-            const searchResults = document.getElementById('searchResults');
-            
-            // 输入事件 - 实时搜索
-            clientSearchInput.addEventListener('input', searchClients);
-            
-            // 焦点事件 - 获得焦点时显示所有客户
-            clientSearchInput.addEventListener('focus', searchClients);
-            
-            // 点击外部关闭搜索结果
-            document.addEventListener('click', function(event) {
-                if (searchResults.style.display === 'block' && 
-                    !searchResults.contains(event.target) && 
-                    event.target !== clientSearchInput) {
-                    searchResults.style.display = 'none';
-                }
-            });
+            document.getElementById('clientSearch').addEventListener('input', searchClients);
             
             // 刷新客户列表
             document.getElementById('refreshClients').addEventListener('click', renderClientsTable);
@@ -5867,116 +5857,6 @@
         window.deleteDayOfItem = function(button, type = 'common') {
             button.closest('tr').remove();
         }
-        
-        // 添加婚礼当天人员
-        // 确保页面加载时检查滚动位置
-        window.addEventListener('load', function() {
-            const backToTopBtn = document.getElementById('backToTopBtn');
-            if (window.pageYOffset > 300) {
-                backToTopBtn.style.display = 'block';
-            } else {
-                backToTopBtn.style.display = 'none';
-            }
-        });
-        
-        window.addDayOfStaff = function() {
-            const tbody = document.getElementById('dayOfStaffTableBody');
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td contenteditable="true">新人员</td>
-                <td contenteditable="true">职位</td>
-                <td contenteditable="true">主要职责</td>
-                <td contenteditable="true">联系方式</td>
-                <td contenteditable="true">备注</td>
-            `;
-            tbody.appendChild(row);
-            // 聚焦到新添加行的第一个可编辑单元格
-            row.querySelector('td[contenteditable="true"]').focus();
-        }
-        
-        // 添加婚礼当天物品
-        window.addDayOfItem = function(type = 'common') {
-            // 如果是物品清单类型，处理物品添加
-            if (type === 'newlywed' || type === 'decor') {
-                const checklistSections = document.querySelectorAll('.checklist-section');
-                let targetSection = null;
-                
-                checklistSections.forEach(section => {
-                    const h4 = section.querySelector('h4');
-                    if (h4) {
-                        if ((type === 'newlywed' && h4.textContent.includes('新人必备物品')) || 
-                            (type === 'decor' && h4.textContent.includes('现场布置物品'))) {
-                            targetSection = section;
-                        }
-                    }
-                });
-                
-                if (targetSection) {
-                    const checklistItem = document.createElement('div');
-                    checklistItem.className = 'checklist-item';
-                    checklistItem.style.display = 'flex';
-                    checklistItem.style.alignItems = 'center';
-                    checklistItem.style.gap = '10px';
-                    checklistItem.style.marginBottom = '10px';
-                    
-                    checklistItem.innerHTML = `
-                        <input type="checkbox" class="status-checkbox">
-                        <div contenteditable="true">新物品</div>
-                    `;
-                    
-                    targetSection.appendChild(checklistItem);
-                    checklistItem.querySelector('div[contenteditable="true"]').focus();
-                    return;
-                }
-            }
-            
-            // 原有的流程节点添加逻辑
-            let tbodyId;
-            switch(type) {
-                case 'groom':
-                    tbodyId = 'groomDayOfScheduleTableBody';
-                    break;
-                case 'bride':
-                    tbodyId = 'brideDayOfScheduleTableBody';
-                    break;
-                case 'common':
-                default:
-                    tbodyId = 'commonDayOfScheduleTableBody';
-                    break;
-            }
-            
-            const tbody = document.getElementById(tbodyId);
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td contenteditable="true">00:00</td>
-                <td contenteditable="true">新环节</td>
-                <td contenteditable="true">地点</td>
-                <td contenteditable="true">负责人</td>
-                <td contenteditable="true">备注</td>
-                <td>
-                    <button class="btn btn-secondary btn-small" onclick="deleteDayOfItem(this, '${type}')">
-                        <i class="fas fa-trash"></i> 删除
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(row);
-            // 聚焦到新添加行的第一个可编辑单元格
-            row.querySelector('td[contenteditable="true"]').focus();
-        }
-        
-        // 回到顶部功能
-        window.addEventListener('scroll', function() {
-            const backToTopBtn = document.getElementById('backToTopBtn');
-            if (window.pageYOffset > 300) {
-                backToTopBtn.style.display = 'block';
-            } else {
-                backToTopBtn.style.display = 'none';
-            }
-        });
-        
-        document.getElementById('backToTopBtn').addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
         
         // 倒计时计算器功能
         function calculateCountdown() {
