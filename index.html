@@ -1540,13 +1540,6 @@
                 font-size: 13px;
             }
             
-            /* 双列布局优化 */
-            .two-column-layout,
-            #dayOfContent .two-column-layout {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
             /* 婚礼当天页面表格优化 */
             #dayOfContent table {
                 min-width: 600px;
@@ -1801,19 +1794,6 @@
             overflow-y: visible;
         }
         
-        /* 优化表格在移动设备上的显示 */
-        .sub-tab-content table,
-        #dayOfContent table {
-            min-width: 100%;
-            overflow-x: auto;
-            display: block;
-        }
-        
-        .sub-tab-content .two-column-layout,
-        #dayOfContent .two-column-layout {
-            display: block;
-        }
-        
         /* 优化卡片在子选项卡内容中的显示 */
         .sub-tab-content .card,
         #dayOfContent .card {
@@ -1826,23 +1806,51 @@
             overflow-y: visible;
         }
         
-        /* 确保婚礼当天页面的表格可以水平滚动 */
-        #dayOfContent table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-            min-width: 100%;
+        /* 桌面端样式 - 双列布局 */
+        @media (min-width: 769px) {
+            /* 核心筹备页面 - 双列布局 */
+            .sub-tab-content .two-column-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            
+            /* 婚礼当天页面 - 双列布局 */
+            #dayOfContent .two-column-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            
+            /* 桌面端表格样式 - 正常显示 */
+            .sub-tab-content table,
+            #dayOfContent table {
+                display: table;
+                min-width: auto;
+                width: 100%;
+            }
         }
         
-        /* 确保婚礼当天页面的两列布局在移动设备上显示为单列 */
-        #dayOfContent .two-column-layout {
-            display: block;
-        }
-        
-        /* 优化婚礼当天页面的卡片样式 */
-        #dayOfContent .card {
-            margin-bottom: 20px;
-            overflow: hidden;
+        /* 移动端样式 - 单列布局 */
+        @media (max-width: 768px) {
+            /* 移动端表格样式 - 水平滚动 */
+            .sub-tab-content table,
+            #dayOfContent table {
+                min-width: 100%;
+                overflow-x: auto;
+                display: block;
+            }
+            
+            /* 移动端双列布局改为单列 */
+            .sub-tab-content .two-column-layout,
+            #dayOfContent .two-column-layout {
+                display: block;
+            }
+            
+            /* 确保婚礼当天页面的表格可以水平滚动 */
+            #dayOfContent table {
+                white-space: nowrap;
+            }
         }
         
         /* 分隔线样式 */
@@ -2165,6 +2173,10 @@
                 <span id="version">1.0 专业版</span>
             </div>
             <div class="header-actions">
+                <span id="currentUserName" style="margin-right: 15px; color: white; font-weight: 600;"></span>
+                <button class="btn btn-secondary" id="userMenuBtn">
+                    <i class="fas fa-user"></i> 用户
+                </button>
                 <button class="btn btn-secondary" id="exportOptionsBtn">
                     <i class="fas fa-download"></i> 导出
                 </button>
@@ -2174,6 +2186,98 @@
             </div>
         </div>
     </header>
+    
+    <!-- 登录模态框 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title"><i class="fas fa-sign-in-alt"></i> 用户登录</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">用户名</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">密码</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary" id="showRegisterBtn">注册新用户</button>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 注册模态框 -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title"><i class="fas fa-user-plus"></i> 注册新用户</h3>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">用户名</label>
+                    <input type="text" id="registerUsername" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">密码</label>
+                    <input type="password" id="registerPassword" name="password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">确认密码</label>
+                    <input type="password" id="registerConfirmPassword" name="confirmPassword" required minlength="6">
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary" id="showLoginBtn">返回登录</button>
+                    <button type="submit" class="btn btn-primary">注册</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 用户菜单 -->
+    <div class="modal" id="userMenuModal">
+        <div class="modal-content" style="max-width: 300px;">
+            <h3 class="modal-title"><i class="fas fa-user-cog"></i> 用户菜单</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn btn-secondary" id="changePasswordBtn">
+                    <i class="fas fa-key"></i> 修改密码
+                </button>
+                <button class="btn btn-secondary" id="createNewUserBtn">
+                    <i class="fas fa-user-plus"></i> 创建新用户
+                </button>
+                <button class="btn btn-primary" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 修改密码模态框 -->
+    <div class="modal" id="changePasswordModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title"><i class="fas fa-key"></i> 修改密码</h3>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="currentPassword">当前密码</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">新密码</label>
+                    <input type="password" id="newPassword" name="newPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">确认新密码</label>
+                    <input type="password" id="confirmNewPassword" name="confirmNewPassword" required minlength="6">
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelChangePasswordBtn">取消</button>
+                    <button type="submit" class="btn btn-primary">修改密码</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <!-- 导航选项卡 -->
     <nav>
@@ -3785,6 +3889,10 @@
     </div>
     
     <script>
+        // 用户认证系统
+        let currentUser = null;
+        let currentUserName = '';
+        
         // 全局数据
         let currentClientId = null;
         let currentClient = null;
@@ -3799,29 +3907,172 @@
         
 
         
-        // 保存到本地存储
-        function saveToLocalStorage() {
-            localStorage.setItem('weddingPlannerClients', JSON.stringify(clients));
-            localStorage.setItem('weddingPlannerSchedules', JSON.stringify(schedules));
-            localStorage.setItem('weddingPlannerLastUpdated', lastLocalUpdate.toString());
+        // 用户认证系统核心逻辑
+        
+        // 密码哈希函数（简单实现，实际项目建议使用更安全的算法）
+        function hashPassword(password) {
+            // 使用SHA-256哈希算法
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            return crypto.subtle.digest('SHA-256', data)
+                .then(hash => {
+                    return Array.from(new Uint8Array(hash))
+                        .map(b => b.toString(16).padStart(2, '0'))
+                        .join('');
+                });
         }
         
-        // 从本地存储加载数据
-        function loadFromLocalStorage() {
-            const savedClients = localStorage.getItem('weddingPlannerClients');
-            const savedSchedules = localStorage.getItem('weddingPlannerSchedules');
-            const savedLastUpdated = localStorage.getItem('weddingPlannerLastUpdated');
-            
-            if (savedClients) {
-                clients = JSON.parse(savedClients);
+        // 获取所有用户
+        function getAllUsers() {
+            const usersJson = localStorage.getItem('weddingPlannerUsers');
+            return usersJson ? JSON.parse(usersJson) : [];
+        }
+        
+        // 保存用户列表
+        function saveUsers(users) {
+            localStorage.setItem('weddingPlannerUsers', JSON.stringify(users));
+        }
+        
+        // 检查用户名是否已存在
+        function isUsernameExists(username) {
+            const users = getAllUsers();
+            return users.some(user => user.username === username);
+        }
+        
+        // 注册新用户
+        async function registerUser(username, password) {
+            if (isUsernameExists(username)) {
+                throw new Error('用户名已存在');
             }
             
-            if (savedSchedules) {
-                schedules = JSON.parse(savedSchedules);
+            if (password.length < 6) {
+                throw new Error('密码长度不能少于6位');
             }
             
-            if (savedLastUpdated) {
-                lastLocalUpdate = parseInt(savedLastUpdated);
+            const hashedPassword = await hashPassword(password);
+            const users = getAllUsers();
+            
+            users.push({
+                username: username,
+                password: hashedPassword,
+                createdAt: Date.now()
+            });
+            
+            saveUsers(users);
+            return true;
+        }
+        
+        // 用户登录
+        async function loginUser(username, password) {
+            const users = getAllUsers();
+            const user = users.find(user => user.username === username);
+            
+            if (!user) {
+                throw new Error('用户名或密码错误');
+            }
+            
+            const hashedPassword = await hashPassword(password);
+            if (user.password !== hashedPassword) {
+                throw new Error('用户名或密码错误');
+            }
+            
+            // 保存当前登录用户
+            currentUser = username;
+            currentUserName = username;
+            localStorage.setItem('weddingPlannerCurrentUser', username);
+            
+            // 更新UI
+            document.getElementById('currentUserName').textContent = `欢迎, ${username}`;
+            
+            // 加载用户数据
+            loadUserFromLocalStorage();
+            return true;
+        }
+        
+        // 用户登出
+        function logoutUser() {
+            currentUser = null;
+            currentUserName = '';
+            localStorage.removeItem('weddingPlannerCurrentUser');
+            
+            // 重置UI
+            document.getElementById('currentUserName').textContent = '';
+            
+            // 清空当前数据
+            clients = [];
+            schedules = [];
+            currentClientId = null;
+            currentClient = null;
+            
+            // 显示登录模态框
+            document.getElementById('loginModal').classList.add('active');
+        }
+        
+        // 修改密码
+        async function changePassword(username, currentPassword, newPassword) {
+            const users = getAllUsers();
+            const userIndex = users.findIndex(user => user.username === username);
+            
+            if (userIndex === -1) {
+                throw new Error('用户不存在');
+            }
+            
+            const user = users[userIndex];
+            const hashedCurrentPassword = await hashPassword(currentPassword);
+            
+            if (user.password !== hashedCurrentPassword) {
+                throw new Error('当前密码错误');
+            }
+            
+            if (newPassword.length < 6) {
+                throw new Error('新密码长度不能少于6位');
+            }
+            
+            const hashedNewPassword = await hashPassword(newPassword);
+            users[userIndex].password = hashedNewPassword;
+            saveUsers(users);
+            return true;
+        }
+        
+        // 保存到本地存储（按用户隔离）
+        function saveToLocalStorage() {
+            if (!currentUser) return;
+            
+            localStorage.setItem(`weddingPlanner_${currentUser}_clients`, JSON.stringify(clients));
+            localStorage.setItem(`weddingPlanner_${currentUser}_schedules`, JSON.stringify(schedules));
+            localStorage.setItem(`weddingPlanner_${currentUser}_lastUpdated`, lastLocalUpdate.toString());
+        }
+        
+        // 从本地存储加载数据（按用户隔离）
+        function loadUserFromLocalStorage() {
+            if (!currentUser) {
+                clients = [];
+                schedules = [];
+                lastLocalUpdate = 0;
+                return;
+            }
+            
+            const savedClients = localStorage.getItem(`weddingPlanner_${currentUser}_clients`);
+            const savedSchedules = localStorage.getItem(`weddingPlanner_${currentUser}_schedules`);
+            const savedLastUpdated = localStorage.getItem(`weddingPlanner_${currentUser}_lastUpdated`);
+            
+            clients = savedClients ? JSON.parse(savedClients) : [];
+            schedules = savedSchedules ? JSON.parse(savedSchedules) : [];
+            lastLocalUpdate = savedLastUpdated ? parseInt(savedLastUpdated) : 0;
+        }
+        
+        // 初始化用户系统
+        function initUserSystem() {
+            // 尝试恢复登录状态
+            const savedUser = localStorage.getItem('weddingPlannerCurrentUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                currentUserName = savedUser;
+                document.getElementById('currentUserName').textContent = `欢迎, ${savedUser}`;
+                loadUserFromLocalStorage();
+            } else {
+                // 显示登录模态框
+                document.getElementById('loginModal').classList.add('active');
             }
         }
         
@@ -3834,10 +4085,10 @@
         
         // 初始化数据
         function initData() {
-            // 从localStorage加载数据
-            loadFromLocalStorage();
+            // 从用户专属本地存储加载数据
+            loadUserFromLocalStorage();
             
-            if (clients.length === 0) {
+            if (clients.length === 0 && currentUser) {
                 // 初始化示例数据
                 clients = [
                     {
@@ -3940,10 +4191,7 @@
         
         // 保存数据到localStorage
         function saveData() {
-            localStorage.setItem('weddingPlannerClients', JSON.stringify(clients));
-            localStorage.setItem('weddingPlannerSchedules', JSON.stringify(schedules));
-            // 同步数据到Firebase
-            saveDataToFirebase();
+            saveToLocalStorage();
         }
         
         // 加载保存的数据
@@ -5635,6 +5883,117 @@
         const formattedDate = defaultDate.toISOString().split('T')[0];
         document.getElementById('weddingDateInput').value = formattedDate;
         calculateCountdown();
+        
+        // 用户认证系统初始化
+        initUserSystem();
+        
+        // 登录表单提交
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await loginUser(username, password);
+                document.getElementById('loginModal').classList.remove('active');
+                loadSavedData();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+        
+        // 注册表单提交
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+            
+            try {
+                await registerUser(username, password);
+                alert('注册成功，请登录');
+                document.getElementById('registerModal').classList.remove('active');
+                document.getElementById('loginModal').classList.add('active');
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+        
+        // 修改密码表单提交
+        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (newPassword !== confirmNewPassword) {
+                alert('两次输入的新密码不一致');
+                return;
+            }
+            
+            if (!currentUser) {
+                alert('请先登录');
+                return;
+            }
+            
+            try {
+                await changePassword(currentUser, currentPassword, newPassword);
+                alert('密码修改成功');
+                document.getElementById('changePasswordModal').classList.remove('active');
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+        
+        // 显示注册模态框
+        document.getElementById('showRegisterBtn').addEventListener('click', function() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('registerModal').classList.add('active');
+        });
+        
+        // 显示登录模态框
+        document.getElementById('showLoginBtn').addEventListener('click', function() {
+            document.getElementById('registerModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        });
+        
+        // 显示用户菜单
+        document.getElementById('userMenuBtn').addEventListener('click', function() {
+            document.getElementById('userMenuModal').classList.add('active');
+        });
+        
+        // 显示修改密码模态框
+        document.getElementById('changePasswordBtn').addEventListener('click', function() {
+            document.getElementById('userMenuModal').classList.remove('active');
+            document.getElementById('changePasswordModal').classList.add('active');
+        });
+        
+        // 显示创建新用户模态框
+        document.getElementById('createNewUserBtn').addEventListener('click', function() {
+            document.getElementById('userMenuModal').classList.remove('active');
+            document.getElementById('registerModal').classList.add('active');
+        });
+        
+        // 退出登录
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('userMenuModal').classList.remove('active');
+            logoutUser();
+        });
+        
+        // 取消修改密码
+        document.getElementById('cancelChangePasswordBtn').addEventListener('click', function() {
+            document.getElementById('changePasswordModal').classList.remove('active');
+        });
+        
+        // 保存数据到用户专属本地存储
+        saveData = function() {
+            saveToLocalStorage();
+        };
     });
     </script>
 </body>
