@@ -1567,6 +1567,22 @@
                 height: 250px;
             }
             
+            /* 统计按钮容器优化 */
+            .stats-buttons-container {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+                margin-top: 15px !important;
+                padding: 0 !important;
+            }
+            
+            /* 统计按钮优化 */
+            .stats-buttons-container .btn {
+                width: 100%;
+                justify-content: space-between;
+                font-size: 14px;
+                padding: 12px 15px;
+            }
+            
             /* 客户操作按钮优化 */
             .client-actions {
                 flex-direction: column;
@@ -2375,20 +2391,6 @@
                     <button class="view-toggle-btn" id="listViewBtn">列表视图</button>
                     <button class="view-toggle-btn" id="statsViewBtn">统计视图</button>
                 </div>
-                <div class="btn-group" style="margin-left: auto; display: flex; gap: 10px;">
-                    <button class="btn btn-secondary btn-small schedule-btn" id="thisMonthBtn">
-                        <i class="fas fa-calendar-month"></i> 本月档期
-                        <span class="schedule-count" id="thisMonthCount">0</span>
-                    </button>
-                    <button class="btn btn-secondary btn-small schedule-btn" id="fullYearBtn">
-                        <i class="fas fa-calendar"></i> 全年档期
-                        <span class="schedule-count" id="fullYearCount">0</span>
-                    </button>
-                    <button class="btn btn-secondary btn-small schedule-btn" id="monthlyIncomeBtn">
-                        <i class="fas fa-money-bill-wave"></i> 本月收入
-                        <span class="schedule-count" id="monthlyIncomeCount">¥0</span>
-                    </button>
-                </div>
                 <button class="btn btn-primary btn-small" id="addEventBtn">
                     <i class="fas fa-plus"></i> 添加婚礼档期
                 </button>
@@ -2421,6 +2423,22 @@
                     
                     <div class="calendar-grid" id="calendarGrid">
                         <!-- 日历将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <!-- 移动到这里的三个统计按钮 -->
+                    <div class="stats-buttons-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; padding: 0 10px;">
+                        <button class="btn btn-secondary btn-small schedule-btn" id="thisMonthBtn" style="background-color: #e74c3c; color: white; justify-content: space-between;">
+                            <span><i class="fas fa-calendar-month"></i> 本月档期</span>
+                            <span class="schedule-count" id="thisMonthCount">0</span>
+                        </button>
+                        <button class="btn btn-secondary btn-small schedule-btn" id="fullYearBtn" style="background-color: #e74c3c; color: white; justify-content: space-between;">
+                            <span><i class="fas fa-calendar"></i> 全年档期</span>
+                            <span class="schedule-count" id="fullYearCount">0</span>
+                        </button>
+                        <button class="btn btn-secondary btn-small schedule-btn" id="monthlyIncomeBtn" style="background-color: #e74c3c; color: white; justify-content: space-between;">
+                            <span><i class="fas fa-money-bill-wave"></i> 本月收入</span>
+                            <span class="schedule-count" id="monthlyIncomeCount">¥0</span>
+                        </button>
                     </div>
                 </div>
             </div>
