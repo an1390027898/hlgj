@@ -2382,11 +2382,13 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-users"></i> 客户管理</h2>
-                    <div class="client-management-tools" style="display: flex; gap: 10px; align-items: center;">
+                    <div class="client-management-tools" style="display: flex; gap: 10px; align-items: center; position: relative;">
                         <input type="text" id="clientSearch" placeholder="搜索客户..." style="padding: 10px 15px; border: 1px solid var(--gray); border-radius: var(--border-radius); font-size: 14px; width: 250px;">
                         <button class="btn btn-primary btn-small" id="refreshClients">
                             <i class="fas fa-sync-alt"></i> 刷新
                         </button>
+                        <!-- 搜索结果显示区域 -->
+                        <div id="searchResults" style="position: absolute; top: 100%; left: 0; width: 250px; max-height: 300px; overflow-y: auto; background: white; border: 1px solid var(--gray); border-radius: 0 0 var(--border-radius) var(--border-radius); box-shadow: var(--shadow); z-index: 1000; display: none;"></div>
                     </div>
                 </div>
                 
@@ -5081,135 +5083,100 @@
         // 搜索客户
         function searchClients() {
             const searchTerm = document.getElementById('clientSearch').value.toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
             
-            // 如果搜索词为空，渲染所有客户
-            if (searchTerm.trim() === '') {
-                renderClientsTable();
-                return;
+            // 获取所有客户或过滤后的客户
+            let filteredClients = clients;
+            if (searchTerm.trim() !== '') {
+                filteredClients = clients.filter(client => {
+                    // 搜索新郎姓名、新娘姓名
+                    const nameMatch = client.groomName.toLowerCase().includes(searchTerm) ||
+                                      client.brideName.toLowerCase().includes(searchTerm);
+                    
+                    // 搜索婚礼地点
+                    const venueMatch = client.venue.toLowerCase().includes(searchTerm);
+                    
+                    // 搜索婚礼日期（格式化和原始格式）
+                    const formattedDate = formatDate(client.weddingDate).toLowerCase();
+                    const originalDate = client.weddingDate.toLowerCase();
+                    const dateMatch = formattedDate.includes(searchTerm) || originalDate.includes(searchTerm);
+                    
+                    // 搜索新人电话
+                    const phoneMatch = (client.groomPhone && client.groomPhone.toLowerCase().includes(searchTerm)) ||
+                                      (client.bridePhone && client.bridePhone.toLowerCase().includes(searchTerm));
+                    
+                    // 综合所有匹配条件
+                    return nameMatch || venueMatch || dateMatch || phoneMatch;
+                });
             }
             
-            const filteredClients = clients.filter(client => {
-                // 搜索新郎姓名、新娘姓名
-                const nameMatch = client.groomName.toLowerCase().includes(searchTerm) ||
-                                  client.brideName.toLowerCase().includes(searchTerm);
-                
-                // 搜索婚礼地点
-                const venueMatch = client.venue.toLowerCase().includes(searchTerm);
-                
-                // 搜索婚礼日期（格式化和原始格式）
-                const formattedDate = formatDate(client.weddingDate).toLowerCase();
-                const originalDate = client.weddingDate.toLowerCase();
-                const dateMatch = formattedDate.includes(searchTerm) || originalDate.includes(searchTerm);
-                
-                // 搜索新人电话
-                const phoneMatch = (client.groomPhone && client.groomPhone.toLowerCase().includes(searchTerm)) ||
-                                  (client.bridePhone && client.bridePhone.toLowerCase().includes(searchTerm));
-                
-                // 搜索婚礼主题
-                const themeMatch = client.theme && client.theme.toLowerCase().includes(searchTerm);
-                
-                // 搜索服务费用
-                const feeMatch = client.fee && client.fee.toLowerCase().includes(searchTerm);
-                
-                // 综合所有匹配条件
-                return nameMatch || venueMatch || dateMatch || phoneMatch || themeMatch || feeMatch;
-            });
+            // 按婚礼日期排序
+            filteredClients.sort((a, b) => new Date(a.weddingDate) - new Date(b.weddingDate));
             
             // 渲染搜索结果
-            const tbody = document.getElementById('clientsTableBody');
-            tbody.innerHTML = '';
+            resultsContainer.innerHTML = '';
             
             // 搜索结果为空时的提示
             if (filteredClients.length === 0) {
-                const noResultRow = document.createElement('tr');
-                noResultRow.innerHTML = `
-                    <td colspan="5" style="text-align: center; padding: 30px; color: var(--gray-dark);">
+                resultsContainer.innerHTML = `
+                    <div style="padding: 15px; text-align: center; color: var(--gray-dark); border-bottom: 1px solid var(--gray);">
                         未找到匹配的客户，请尝试其他搜索条件
-                    </td>
+                    </div>
                 `;
-                tbody.appendChild(noResultRow);
+                resultsContainer.style.display = 'block';
                 return;
             }
             
-            // 搜索结果统计和提示
-            const resultCountRow = document.createElement('tr');
-            resultCountRow.innerHTML = `
-                <td colspan="5" style="text-align: left; padding: 15px; background-color: var(--secondary-color); color: var(--dark-color); font-weight: 600;">
-                    找到 ${filteredClients.length} 个匹配的客户
-                </td>
-            `;
-            tbody.appendChild(resultCountRow);
-            
+            // 渲染搜索结果项
             filteredClients.forEach(client => {
-                const row = document.createElement('tr');
-                // 添加高亮样式
-                row.className = 'search-result';
-                row.style.cursor = 'pointer';
-                row.style.backgroundColor = '#f8c8c6';
-                row.style.transition = 'all 0.3s ease';
-                row.style.borderLeft = '5px solid var(--primary-color)';
-                row.addEventListener('click', function() {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'search-result-item';
+                resultItem.style.padding = '12px 15px';
+                resultItem.style.borderBottom = '1px solid var(--gray)';
+                resultItem.style.cursor = 'pointer';
+                resultItem.style.transition = 'background-color 0.2s ease';
+                resultItem.style.backgroundColor = 'white';
+                
+                // 悬停效果
+                resultItem.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'var(--secondary-color)';
+                });
+                
+                resultItem.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = 'white';
+                });
+                
+                // 点击跳转到客户详情
+                resultItem.addEventListener('click', function() {
                     selectClient(client.id);
                     // 切换到客户详情选项卡
                     switchTab('client-details');
                     // 滚动到客户详情页面顶部
                     document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // 关闭搜索结果
+                    resultsContainer.style.display = 'none';
+                    // 清空搜索框
+                    document.getElementById('clientSearch').value = '';
                 });
-                row.innerHTML = `
-                    <td>
-                        <select class="status-select" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--gray); cursor: pointer;">
-                            <option value="green" ${client.status === 'green' ? 'selected' : ''}>进行中</option>
-                            <option value="yellow" ${client.status === 'yellow' ? 'selected' : ''}>待确认</option>
-                            <option value="red" ${client.status === 'red' ? 'selected' : ''}>已取消</option>
-                        </select>
-                    </td>
-                    <td style="font-weight: 700; color: var(--dark-color);">${client.groomName} & ${client.brideName}</td>
-                    <td>${formatDate(client.weddingDate)}</td>
-                    <td>${client.venue}</td>
-                    <td style="cursor: auto;">
-                        <button class="btn btn-primary btn-small" style="background-color: var(--primary-color); color: white;">
-                            <i class="fas fa-eye"></i> 查看详情
-                        </button>
-                        <button class="btn btn-secondary btn-small" style="margin-left: 5px;">
-                            <i class="fas fa-trash"></i> 删除
-                        </button>
-                    </td>
+                
+                // 显示客户基本信息
+                resultItem.innerHTML = `
+                    <div style="font-weight: 600; color: var(--dark-color); margin-bottom: 5px;">
+                        ${client.groomName} & ${client.brideName}
+                    </div>
+                    <div style="font-size: 13px; color: var(--gray-dark); margin-bottom: 3px;">
+                        <i class="fas fa-calendar-alt"></i> ${formatDate(client.weddingDate)}
+                    </div>
+                    <div style="font-size: 13px; color: var(--gray-dark);">
+                        <i class="fas fa-map-marker-alt"></i> ${client.venue}
+                    </div>
                 `;
-                tbody.appendChild(row);
                 
-                // 为状态选择器添加事件监听器
-                const statusSelect = row.querySelector('.status-select');
-                statusSelect.addEventListener('change', function(event) {
-                    event.stopPropagation();
-                    updateClientStatus(client.id, this.value);
-                });
-                
-                // 为查看详情按钮添加事件监听器
-                const viewButton = row.querySelector('.btn-primary');
-                viewButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    selectClient(client.id);
-                    switchTab('client-details');
-                    document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-                
-                // 为删除按钮添加事件监听器
-                const deleteButton = row.querySelector('.btn-secondary');
-                deleteButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    deleteClient(client.id);
-                });
+                resultsContainer.appendChild(resultItem);
             });
             
-            // 如果只有一个搜索结果，直接跳转到该客户详情
-            if (filteredClients.length === 1) {
-                // 延迟跳转，让用户看到搜索结果
-                setTimeout(() => {
-                    selectClient(filteredClients[0].id);
-                    switchTab('client-details');
-                    document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 300);
-            }
+            // 显示搜索结果容器
+            resultsContainer.style.display = 'block';
         }
         
         // 添加档期
@@ -5488,7 +5455,23 @@
             });
             
             // 客户搜索
-            document.getElementById('clientSearch').addEventListener('input', searchClients);
+            const clientSearchInput = document.getElementById('clientSearch');
+            const searchResults = document.getElementById('searchResults');
+            
+            // 输入事件 - 实时搜索
+            clientSearchInput.addEventListener('input', searchClients);
+            
+            // 焦点事件 - 获得焦点时显示所有客户
+            clientSearchInput.addEventListener('focus', searchClients);
+            
+            // 点击外部关闭搜索结果
+            document.addEventListener('click', function(event) {
+                if (searchResults.style.display === 'block' && 
+                    !searchResults.contains(event.target) && 
+                    event.target !== clientSearchInput) {
+                    searchResults.style.display = 'none';
+                }
+            });
             
             // 刷新客户列表
             document.getElementById('refreshClients').addEventListener('click', renderClientsTable);
