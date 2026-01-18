@@ -4415,11 +4415,13 @@
                     updateClientStatus(client.id, this.value);
                 });
                 
-                // 为编辑按钮添加事件监听器
-                const editButton = row.querySelector('.btn-primary');
-                editButton.addEventListener('click', function(event) {
+                // 为查看详情按钮添加事件监听器
+                const viewButton = row.querySelector('.btn-primary');
+                viewButton.addEventListener('click', function(event) {
                     event.stopPropagation();
                     selectClient(client.id);
+                    switchTab('client-details');
+                    document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
                 
                 // 为删除按钮添加事件监听器
@@ -5117,6 +5119,27 @@
             const tbody = document.getElementById('clientsTableBody');
             tbody.innerHTML = '';
             
+            // 搜索结果为空时的提示
+            if (filteredClients.length === 0) {
+                const noResultRow = document.createElement('tr');
+                noResultRow.innerHTML = `
+                    <td colspan="5" style="text-align: center; padding: 30px; color: var(--gray-dark);">
+                        未找到匹配的客户，请尝试其他搜索条件
+                    </td>
+                `;
+                tbody.appendChild(noResultRow);
+                return;
+            }
+            
+            // 搜索结果统计和提示
+            const resultCountRow = document.createElement('tr');
+            resultCountRow.innerHTML = `
+                <td colspan="5" style="text-align: left; padding: 15px; background-color: var(--secondary-color); color: var(--dark-color); font-weight: 600;">
+                    找到 ${filteredClients.length} 个匹配的客户
+                </td>
+            `;
+            tbody.appendChild(resultCountRow);
+            
             filteredClients.forEach(client => {
                 const row = document.createElement('tr');
                 // 添加高亮样式
@@ -5124,6 +5147,7 @@
                 row.style.cursor = 'pointer';
                 row.style.backgroundColor = '#f8c8c6';
                 row.style.transition = 'all 0.3s ease';
+                row.style.borderLeft = '5px solid var(--primary-color)';
                 row.addEventListener('click', function() {
                     selectClient(client.id);
                     // 切换到客户详情选项卡
@@ -5139,11 +5163,11 @@
                             <option value="red" ${client.status === 'red' ? 'selected' : ''}>已取消</option>
                         </select>
                     </td>
-                    <td>${client.groomName} & ${client.brideName}</td>
+                    <td style="font-weight: 700; color: var(--dark-color);">${client.groomName} & ${client.brideName}</td>
                     <td>${formatDate(client.weddingDate)}</td>
                     <td>${client.venue}</td>
                     <td style="cursor: auto;">
-                        <button class="btn btn-primary btn-small">
+                        <button class="btn btn-primary btn-small" style="background-color: var(--primary-color); color: white;">
                             <i class="fas fa-eye"></i> 查看详情
                         </button>
                         <button class="btn btn-secondary btn-small" style="margin-left: 5px;">
@@ -5179,9 +5203,12 @@
             
             // 如果只有一个搜索结果，直接跳转到该客户详情
             if (filteredClients.length === 1) {
-                selectClient(filteredClients[0].id);
-                switchTab('client-details');
-                document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // 延迟跳转，让用户看到搜索结果
+                setTimeout(() => {
+                    selectClient(filteredClients[0].id);
+                    switchTab('client-details');
+                    document.getElementById('client-details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
             }
         }
         
