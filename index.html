@@ -1441,12 +1441,29 @@
                 border-radius: var(--border-radius);
                 gap: 8px;
                 min-height: 45px;
+                width: 100%;
+                margin-bottom: 10px;
             }
             
             .btn-small {
                 padding: 8px 15px;
                 font-size: 13px;
                 min-height: auto;
+                width: auto;
+                margin-bottom: 0;
+            }
+            
+            /* 卡片头部优化 */
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            /* 保存按钮容器优化 */
+            .save-button-container {
+                margin-bottom: 15px;
+                width: 100%;
             }
             
             /* 表格优化 */
@@ -1454,20 +1471,31 @@
                 overflow-x: scroll;
                 -webkit-overflow-scrolling: touch;
                 margin-bottom: 15px;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow);
             }
             
             table {
-                min-width: 600px;
+                min-width: 800px;
                 font-size: 13px;
+                border-collapse: collapse;
+                background: white;
             }
             
             th {
-                padding: 10px 8px;
+                padding: 12px 10px;
                 font-size: 12px;
+                font-weight: 600;
+                background-color: var(--primary-color);
+                color: white;
+                text-align: left;
+                position: sticky;
+                top: 0;
             }
             
             td {
-                padding: 10px 8px;
+                padding: 12px 10px;
+                border-bottom: 1px solid var(--gray-light);
             }
             
             /* 模态框优化 */
@@ -1477,11 +1505,30 @@
                 padding: 20px;
                 margin: 10px;
                 border-radius: var(--border-radius);
+                max-height: 90vh;
             }
             
             .modal-title {
                 font-size: 20px;
                 margin-bottom: 15px;
+            }
+            
+            /* 用户认证模态框优化 */
+            #loginModal .modal-content,
+            #registerModal .modal-content,
+            #changePasswordModal .modal-content {
+                width: 98%;
+                max-width: 350px;
+                margin: 20px auto;
+            }
+            
+            /* 用户菜单模态框优化 */
+            #userMenuModal .modal-content {
+                width: 90%;
+                max-width: 250px;
+                right: 10px;
+                left: auto;
+                margin: 20px 10px;
             }
             
             /* 操作按钮组优化 */
@@ -1533,26 +1580,42 @@
                 padding: 12px;
                 gap: 8px;
                 top: 110px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                -webkit-overflow-scrolling: touch;
             }
             
             .sub-tab {
                 padding: 10px 18px;
                 font-size: 13px;
+                white-space: nowrap;
+                flex-shrink: 0;
             }
             
             /* 婚礼当天页面表格优化 */
             #dayOfContent table {
-                min-width: 600px;
+                min-width: 800px;
                 font-size: 13px;
+                border-collapse: collapse;
+                background: white;
             }
             
             #dayOfContent th {
-                padding: 10px 8px;
+                padding: 12px 10px;
                 font-size: 12px;
+                font-weight: 600;
+                background-color: var(--primary-color);
+                color: white;
+                text-align: left;
+                position: sticky;
+                top: 0;
             }
             
             #dayOfContent td {
-                padding: 10px 8px;
+                padding: 12px 10px;
+                border-bottom: 1px solid var(--gray-light);
             }
             
             /* 进度条优化 */
@@ -3618,99 +3681,9 @@
                         </div>
                     </div>
                     
-                    <!-- 婚礼当天人员分工 -->
-                    <div style="margin-bottom: 30px;">
-                        <h3 style="margin-bottom: 15px; color: var(--dark-color); font-size: 20px;">当天人员分工</h3>
-                        <table id="dayOfStaffTable" style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">姓名</th>
-                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">职位</th>
-                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">主要职责</th>
-                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">联系方式</th>
-                                    <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--dark-color); border-bottom: 2px solid var(--primary-color);">备注</th>
-                                </tr>
-                            </thead>
-                            <tbody id="dayOfStaffTableBody">
-                                <!-- 示例数据 -->
-                                <tr>
-                                    <td contenteditable="true">主持人</td>
-                                    <td contenteditable="true">婚礼主持</td>
-                                    <td contenteditable="true">把控整个婚礼流程</td>
-                                    <td contenteditable="true">13700137001</td>
-                                    <td contenteditable="true">提前1小时到场</td>
-                                </tr>
-                                <tr>
-                                    <td contenteditable="true">摄影师</td>
-                                    <td contenteditable="true">婚礼摄影</td>
-                                    <td contenteditable="true">全程拍摄婚礼照片</td>
-                                    <td contenteditable="true">13800138002</td>
-                                    <td contenteditable="true">提前1小时到场</td>
-                                </tr>
-                                <tr>
-                                    <td contenteditable="true">摄像师</td>
-                                    <td contenteditable="true">婚礼摄像</td>
-                                    <td contenteditable="true">全程拍摄婚礼视频</td>
-                                    <td contenteditable="true">13900139002</td>
-                                    <td contenteditable="true">提前1小时到场</td>
-                                </tr>
-                                <tr>
-                                    <td contenteditable="true">化妆师</td>
-                                    <td contenteditable="true">新娘化妆</td>
-                                    <td contenteditable="true">新娘和伴娘的妆容和发型</td>
-                                    <td contenteditable="true">13700137002</td>
-                                    <td contenteditable="true">提前2小时到场</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
                     
-                    <!-- 婚礼当天物品清单 -->
-                    <div>
-                        <h3 style="margin-bottom: 15px; color: var(--dark-color); font-size: 20px;">当天物品清单</h3>
-                        <div id="dayOfItemsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-                            <!-- 示例数据 -->
-                            <div class="checklist-section" style="background-color: var(--light-color); padding: 20px; border-radius: var(--border-radius);">
-                                <h4 style="margin-bottom: 15px; color: var(--dark-color); font-size: 16px;">新人必备物品</h4>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">婚戒</div>
-                                </div>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">誓言卡</div>
-                                </div>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">身份证</div>
-                                </div>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">红包</div>
-                                </div>
-                            </div>
-                            
-                            <div class="checklist-section" style="background-color: var(--light-color); padding: 20px; border-radius: var(--border-radius);">
-                                <h4 style="margin-bottom: 15px; color: var(--dark-color); font-size: 16px;">现场布置物品</h4>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">鲜花</div>
-                                </div>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">气球</div>
-                                </div>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">蜡烛</div>
-                                </div>
-                                <div class="checklist-item" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                    <input type="checkbox" class="status-checkbox">
-                                    <div contenteditable="true">音响设备</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
